@@ -81,11 +81,16 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Verifier</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">value</span>(<span class="params">self</span>):</span><br><span class="line">        value = <span class="built_in">next</span>(<span class="variable language_">self</span>.vals)</span><br><span class="line">        <span class="keyword">assert</span> - <span class="number">2</span>**BITS &lt; value &lt; <span class="number">2</span>**BITS</span><br><span class="line">        <span class="variable language_">self</span>.tx.value(value)</span><br><span class="line">        <span class="keyword">return</span> value</span><br></pre></td></tr></table></figure>
 
 <p>Actually $\mathcal{V}$ does NOT check how many commitments are used, and the verification for the last constraint just sum all of them up. So we can add an extra “unauthorized” commitment to control the value to zero. Since <code>transcript</code> is unchanged, we can first get both the constraint and all the $p_i$, and then construct out commitment. </p>
-<p>During the contest we noticed some strange implementations in the challenge XD, but didn’t analyze it further.</p>
-<!-- 
-<img src="/2025/03/10/kalmarctf2025/image/1.png" class="" title="[1]"><img src="/2025/03/10/kalmarctf2025/image/2.png" class="" title="[1]"> -->
-
-<p><img src="/2025/03/10/kalmarctf2025/image/1.png" alt="image"></p>
+<p>During the contest we did notice some strange implementations in the challenge.</p>
+<table>
+<thead>
+<tr>
+<th><img src="/2025/03/10/kalmarctf2025/image/1.png" alt="image"></th>
+<th><img src="/2025/03/10/kalmarctf2025/image/2.png" alt="image"></th>
+</tr>
+</thead>
+</table>
+<p>But nobody gave it a deeper analysis XD</p>
 ]]></content>
       <tags>
         <tag>zkp</tag>
