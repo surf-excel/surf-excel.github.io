@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Kalmar CTF 2025</title>
+    <title>ZZKAoK::Kalmar CTF 2025</title>
     <url>/2025/03/10/kalmarctf2025/</url>
-    <content><![CDATA[<p>I played with r3kapig last weekend, and we managed to solve 5 out of 8 crypto challs. </p>
-<span id="more"></span>
-
+    <content><![CDATA[<p>Time: 2025.03.09-10 (online)</p>
+<p>I played with r3kapig last weekend, and we managed to solve 5 out of 8 crypto challs. </p>
 <h2 id="ZZKAoK-6-solves"><a href="#ZZKAoK-6-solves" class="headerlink" title="ZZKAoK (6 solves)"></a>ZZKAoK (6 solves)</h2><blockquote>
 <ul>
 <li><a href="ZZKAoK/client.sage">client.sage</a></li>
@@ -99,15 +98,16 @@
       </tags>
   </entry>
   <entry>
-    <title>SECCON CTF 2025</title>
+    <title>SECCON CTF 2025 Final</title>
     <url>/2025/03/04/secconctf2025/</url>
-    <content><![CDATA[<p>I participated SECCON 13th Final as a member of P1G SEKAI this weekend, and we finally got 4th among international teams.</p>
+    <content><![CDATA[<p>Time: 2025.03.01-02 (onsite)</p>
+<p>I participated SECCON 13th Final as a member of P1G SEKAI this weekend, and we finally got 4th among international teams.</p>
 <p><img src="/2025/03/04/secconctf2025/images/2.jpg" alt="rank"></p>
 <p>Nice crypto challenges, and I solved 3 out of 4. IF ONLY I’d ever taken some time to study UOV.</p>
 <p><img src="/2025/03/04/secconctf2025/images/1.png" alt="solve"></p>
 <p>Or maybe I was just too nervous.</p>
 <p>XO</p>
-<h2 id="RSA-8-solved"><a href="#RSA-8-solved" class="headerlink" title="RSA+ (8 solved)"></a>RSA+ (8 solved)</h2><blockquote>
+<h2 id="RSA-8-solves"><a href="#RSA-8-solves" class="headerlink" title="RSA+ (8 solves)"></a>RSA+ (8 solves)</h2><blockquote>
 <ul>
 <li><a href="RSA+/task.py">task.py</a></li>
 </ul>
@@ -117,7 +117,7 @@
 <p>solution: <a href="RSA+/exp.py">exp.py</a></p>
 </blockquote>
 <p>I believe there exists a better way though.</p>
-<h2 id="DLP-7-solved"><a href="#DLP-7-solved" class="headerlink" title="DLP+ (7 solved)"></a>DLP+ (7 solved)</h2><blockquote>
+<h2 id="DLP-7-solves"><a href="#DLP-7-solves" class="headerlink" title="DLP+ (7 solves)"></a>DLP+ (7 solves)</h2><blockquote>
 <ul>
 <li><a href="DLP+/task.py">task.py</a></li>
 </ul>
@@ -129,7 +129,7 @@
 </blockquote>
 <p>@Sceleri and @soon_haari used $p &#x3D; 2^a \cdot 3^b + 1$. It does make more sense since $g &#x3D; 2^{a-1} \cdot 3^b$ and $h &#x3D; 2^a \cdot 3^{b-1}$ (same in our solution). But I donot want to go through it again so just let it go.</p>
 <p><img src="/2025/03/04/secconctf2025/images/3.png" alt="image"></p>
-<h2 id="hell-summon-6-solved"><a href="#hell-summon-6-solved" class="headerlink" title="hell_summon (6 solved)"></a>hell_summon (6 solved)</h2><blockquote>
+<h2 id="hell-summon-6-solves"><a href="#hell-summon-6-solves" class="headerlink" title="hell_summon (6 solves)"></a>hell_summon (6 solves)</h2><blockquote>
 <ul>
 <li><a href="hell_summon/task.py">task.py</a></li>
 </ul>
@@ -143,7 +143,7 @@
 <p>solution: <a href="hell_summon/exp.py">exp.py</a></p>
 </blockquote>
 <p>Definitely not a pleasing code but whatever.</p>
-<h2 id="x-x-4-solved"><a href="#x-x-4-solved" class="headerlink" title="*x_x (4 solved)"></a>*x_x (4 solved)</h2><blockquote>
+<h2 id="x-x-4-solves"><a href="#x-x-4-solves" class="headerlink" title="*x_x (4 solves)"></a>*x_x (4 solves)</h2><blockquote>
 <ul>
 <li><a href="x_x/task.sage">task.sage</a></li>
 </ul>
@@ -174,6 +174,58 @@
       <tags>
         <tag>UOV</tag>
         <tag>OL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>zk-Openings::Srdnlen CTF 2025</title>
+    <url>/2025/03/24/srdnlenctf2025/</url>
+    <content><![CDATA[<p>Time: 2025.01.19-20 (online)</p>
+<p>Interesting challenge, but I didn’t have enough time to solve it during the contest XDDD</p>
+<h2 id="zk-Openings-0-solve"><a href="#zk-Openings-0-solve" class="headerlink" title="zk-Openings (0 solve)"></a>zk-Openings (0 solve)</h2><blockquote>
+<ul>
+<li><a href="https://github.com/srdnlen/srdnlenctf-2025_public/tree/main/crypto_zk-openings/src">https://github.com/srdnlen/srdnlenctf-2025_public&#x2F;tree&#x2F;main&#x2F;crypto_zk-openings&#x2F;src</a></li>
+</ul>
+</blockquote>
+<p>I actually learnt a lot from the implementation, thank you @lrnzsir.</p>
+<h3 id="KZG-Commitment"><a href="#KZG-Commitment" class="headerlink" title="KZG Commitment"></a>KZG Commitment</h3><p>KZG commitment is a polynomial commitment scheme proposed by <a href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf">Kate et al in 2010</a>.</p>
+<p>While the original paper used a symmertric type-1 pairing, we prefer to use type-3 pairing these days. Basically we have three groups $(G_1, G_2, G_T)$ , two generators $(g_1 \in G_1, g_2 \in G_2)$, and a bilinear pairing function $e: G_1 \times G_2 \rightarrow G_T$. </p>
+<ol>
+<li>$\mathcal{Setup}(d) \rightarrow srs$: randomly samples a secret value $x$, and computes $srs &#x3D; (g_1^{x}, …, g_1^{x^d}, g_2^{x})$. While $x$ is considered to be “toxic waste”, it must be generated by trusted authority and deleted properly after use.</li>
+<li>$\mathcal{Commit}(srs, f) \rightarrow com$: computes the commitment $com &#x3D; g_1^{\Sigma_{i&#x3D;0}^d f_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{f_i}$ for the polynomial.</li>
+<li>$\mathcal{EvalProve}(srs, f, z) \rightarrow (\pi, f(z))$: computes a polynomial $q(x) &#x3D; \frac{f(x) - f(z)}{x-z}$. Then it computes the proof $\pi &#x3D; g_1^{\Sigma_{i&#x3D;0}^d q_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{q_i}$, proving that one knows the evaluation of $f$ over $z$.</li>
+<li>$\mathcal{EvalVerify}(srs, com, \pi, z, f(z)) \rightarrow 0&#x2F;1$: verifies the proof by checking $e(com \cdot g_1^{-f(z)}, g_2) \overset{?}{&#x3D;} e(\pi, g_2^{s} \cdot g_2^{-z})$.</li>
+</ol>
+<blockquote>
+<p>Note that KZG is a commitment (instead of ZKP) scheme. </p>
+</blockquote>
+<h3 id="The-Challenge"><a href="#The-Challenge" class="headerlink" title="The Challenge"></a>The Challenge</h3><p>For this challenge, we performs the KZG process on some secret polynomial $f$ and ended up with <code>opening.json</code>. Considering the difficulty of DLP under standard parameters, I actually just skip the content related to curve points. So basically we have $k&#x3D;20$ pairs of $(x_i, y_i&#x3D;f(x_i))$.</p>
+<p>And here is how we get the secret polynomial. </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> n <span class="keyword">in</span> AES.key_size <span class="comment"># 32</span></span><br><span class="line">key = os.urandom(n)</span><br><span class="line">evals = <span class="built_in">list</span>(key)</span><br><span class="line">poly = P(intt(evals))</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcg</span>(<span class="params">m: <span class="built_in">int</span>, a: <span class="built_in">int</span>, c: <span class="built_in">int</span>, x: <span class="built_in">int</span></span>) -&gt; <span class="string">&quot;Generator[int, None, None]&quot;</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Linear Congruential Generator &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        x = (a * x + c) % m</span><br><span class="line">        <span class="keyword">yield</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a, c, x = [secrets.randbelow(p) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)]</span><br><span class="line">rng = lcg(p, a, c, x)</span><br><span class="line"></span><br><span class="line">k = <span class="number">20</span></span><br><span class="line">hiding_poly = P([<span class="built_in">next</span>(rng) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k)])</span><br><span class="line">hidden_poly = poly + hiding_poly * Z_H</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(hidden_poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br></pre></td></tr></table></figure>
+
+<p>In short, we have a 32-degree polynomial $f(x)$ and a 20-degree polynomial $g(x)$, where $f(H_i) &#x3D; key_i$ and $g_i$ is generated successively by a secret LCG. Then we have our secret polynomial $h(x) &#x3D; f(x) + g(x) \cdot (x^n-1)$ satisfying $h(H_i) &#x3D; f(H_i) &#x3D; key_i$ since $H_i^n &#x3D; 1$.</p>
+<p>According to previous discussion, we have 20 pairs of random points $(x_i, h(x_i))$, which is apparently not enough to recover $h(x)$. Considering $key_i$ is very small compared to $p$, LLL is our option. </p>
+<p>We can’t construct the Lattice directly, but we can resort to $g(x)$. The first step is to establish a linear representation between $g(x)$ and $key_i$, which is quite simple, since <code>ntt</code>, <code>intt</code> and <code>polynomial_evaluation</code> are all linear transformations. </p>
+<ul>
+<li>$\vec{key} &#x3D; NTT_{n \times n} \cdot \vec{f}$</li>
+<li>$\vec{y} &#x3D; X_{k \times (n+k)} \cdot \vec{h} &#x3D; FX_{k \times n} \cdot \vec{f}+ GX_{k \times k} \cdot \vec{g}$</li>
+</ul>
+<p>$\Rightarrow \vec{g} &#x3D; GX^{-1} \cdot (\vec{y} - FX \cdot NTT^{-1} \cdot \vec{key})$</p>
+<p>For $NTT^{-1}$, you can also compute $iNTT$.</p>
+<h3 id="Linearization-for-Unknown-LCG"><a href="#Linearization-for-Unknown-LCG" class="headerlink" title="Linearization for Unknown LCG"></a>Linearization for Unknown LCG</h3><p>We know that $g_{i+1} &#x3D; a \cdot g_i + b$, but $(a, b)$ are randomly chosen on $GF_p$. To get rid of them, we construct equations like $(g_{i+d_0} - g_{i}) \cdot (g_{j+d_1} - g_{j}) &#x3D; (g_{i+d_1} - g_{i}) \cdot (g_{j+d_0} - g_{j})$.</p>
+<p>Here comes an interesting (maybe) question: how many linearly independent equations can we get? Well this did appealled to me and @糖醋小鸡块. Since we can get $k-2$ equations like $y_{i+1} &#x3D; a \cdot y_i$, we can choose any two of them to eliminate $a$, and thus we have $C(k-2, 2)$ equations.</p>
+<p>For @lrnzsir’s strategy, he iterates $(g_{i+2}-g_{i+1}) \cdot (g_{j+1}-g_j) &#x3D; (g_{i+1}-g_i) \cdot (g_{j+2}-g_{j+1})$ for all $i, j \in [k - 2]$ and $i &lt; j$. We can get exactly $C(k-2, 2)$ equations and each equation contains a unique binomial (thus linear independent). So this is the best we can get.</p>
+<blockquote>
+<p>We (@糖醋小鸡块) believe there exists a better way for theoratical analysis.</p>
+</blockquote>
+<p>With linear transformation, we have $C(k-2, 2)$ quadratic equations about $key_i$ now, containing $n + C(n+1, 2)$ monomials. Then we can do LLL on the linearized system to recover the key. One can ignore some equations and utilize <code>flatter</code> for better efficiency.</p>
+<blockquote>
+<p><a href="srdnlenctf2025/zk-Openings/exp.py">exp.py</a></p>
+</blockquote>
+<p>There maybe some difference in my code since it’s implemented months ago XD</p>
+]]></content>
+      <tags>
+        <tag>KZG</tag>
+        <tag>LCG Linearization</tag>
       </tags>
   </entry>
 </search>
