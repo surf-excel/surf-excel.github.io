@@ -16,7 +16,7 @@
 <meta property="og:image" content="http://rechn0.github.io/2025/03/10/kalmarctf2025/images/1.png">
 <meta property="og:image" content="http://rechn0.github.io/2025/03/10/kalmarctf2025/images/2.png">
 <meta property="article:published_time" content="2025-03-10T06:15:36.000Z">
-<meta property="article:modified_time" content="2025-04-07T08:38:54.450Z">
+<meta property="article:modified_time" content="2025-04-29T07:59:16.885Z">
 <meta property="article:author" content="rec">
 <meta property="article:tag" content="ZKP">
 <meta name="twitter:card" content="summary">
@@ -157,7 +157,7 @@
       
         <time datetime="2025-03-10T06:15:36.000Z" class="dt-published" itemprop="datePublished">2025-03-10</time>
         
-        (Updated: <time datetime="2025-04-07T08:38:54.450Z" class="dt-updated" itemprop="dateModified">2025-04-07</time>)
+        (Updated: <time datetime="2025-04-29T07:59:16.885Z" class="dt-updated" itemprop="dateModified">2025-04-29</time>)
         
       
     </div>
@@ -191,18 +191,18 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># relation to prove:</span></span><br><span class="line"><span class="comment"># p \notin &#123;-1, 1&#125;</span></span><br><span class="line"><span class="comment"># q \notin &#123;-1, 1&#125;</span></span><br><span class="line"><span class="comment"># p * q = N</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># via:</span></span><br><span class="line"><span class="comment"># a^2 - 4 &gt;= 0 &lt;=&gt; a \notin &#123;-1, 1&#125;</span></span><br><span class="line"><span class="comment"># b^2 - 4 &gt;= 0 &lt;=&gt; b \notin &#123;-1, 1&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># arithmetic circuit:</span></span><br><span class="line"><span class="comment"># p * q = N</span></span><br><span class="line"><span class="comment"># a1^2 + a2^2 + a3^2 + a4^2 = p^2 - 4</span></span><br><span class="line"><span class="comment"># b1^2 + b2^2 + b3^2 + b4^2 = q^2 - 4</span></span><br></pre></td></tr></table></figure>
 
 <p>Apparently $\mathcal{P}$ is able to compute a valid proof if and only if he knows the factors.</p>
-<p>But we don’t want to reveal any other information about the factors (thus zeor-knowledge), so $\mathcal{P}$ CANNOT just send the values to $\mathcal{V}$. Instead, we randomly choose small prime $p_i$ and check the constraints on $GF_{p_i}$. Our proof is more reliable with more primes chosen, as analyzed in the challenge:</p>
+<p>But we don’t want to reveal any other information about the factors (thus zeor-knowledge), so $\mathcal{P}$ CANNOT just send the values to $\mathcal{V}$. Instead, we randomly choose small prime $p_i$ and check the constraints on $\mathbb{F_{p_i}}$. Our proof is more reliable with more primes chosen, as analyzed in the challenge:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">TOTAL_PRIME_BITS = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> PRIMES:</span><br><span class="line">    TOTAL_PRIME_BITS += p.bit_length() - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">BITS = <span class="number">50_000</span>                              <span class="comment"># maximum norm, bits</span></span><br><span class="line">SECP = <span class="number">256</span>                                 <span class="comment"># \secpar</span></span><br><span class="line">RATE = (TOTAL_PRIME_BITS + BITS - <span class="number">1</span>)//BITS <span class="comment"># rate</span></span><br><span class="line">SECB = RATE.bit_length() - <span class="number">1</span>               <span class="comment"># security bits per query</span></span><br><span class="line">QUERIES = (SECP + SECB - <span class="number">1</span>) // SECB        <span class="comment"># total number of queries</span></span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">len</span>(PRIMES) == <span class="number">1</span> &lt;&lt; NUML</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>In fact $\mathcal{P}$ leaks $secret \pmod{p_i}$ in this process, so this is technically not that “zero-knowledge”.</p>
 </blockquote>
-<p>For a secure proof system, we must make sure $\mathcal{P}$ computed the proof correctly, rather than giving a random answer on $GF_{p_i}$. Here is how we do:</p>
+<p>For a secure proof system, we must make sure $\mathcal{P}$ computed the proof correctly, rather than giving a random answer on \mathbb{F_{p_i}}$. Here is how we do:</p>
 <ol>
 <li>$\mathcal{P}$ makes commitments on secret values.</li>
 <li>$\mathcal{V}$ chooses some primes $p_i \in PRIMES$.</li>
-<li>$\mathcal{P}$ computes constraints inputs and outputs values on $GF_{p_i}$.</li>
-<li>$\mathcal{V}$ check the validity on $GF_{p_i}$.</li>
+<li>$\mathcal{P}$ computes constraints inputs and outputs values on $\mathbb{F_{p_i}}$.</li>
+<li>$\mathcal{V}$ check the validity on \mathbb{F_{p_i}}$.</li>
 </ol>
 <h3 id="Merkle-Tree"><a href="#Merkle-Tree" class="headerlink" title="Merkle Tree"></a>Merkle Tree</h3><p>With Commitment Scheme, we ensure that $\mathcal{P}$ cannot modify input values in the subsequnt proof steps. Here the challenge uses Merkle Tree Commitment, which is suitable for set commitment and membership open&#x2F;proof.</p>
 <ol>
@@ -223,7 +223,7 @@
 <li>$\mathcal{P}$ makes commitments on secret values.</li>
 <li>$\mathcal{P}$ gets some primes $p_i \in PRIMES$ from <code>transcripts</code>.</li>
 <li>$\mathcal{P}$ opens the commitments on the chosen $p_i$.</li>
-<li>$\mathcal{P}$ computes constraints inputs and outputs values on $GF_{p_i}$.</li>
+<li>$\mathcal{P}$ computes constraints inputs and outputs values on $\mathbb{F_{p_i}}$.</li>
 </ol>
 <p>$\mathcal{V}$:</p>
 <ol>
