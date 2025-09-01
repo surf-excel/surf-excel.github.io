@@ -295,58 +295,6 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
       </tags>
   </entry>
   <entry>
-    <title>fairy-ring::Dice CTF 2025 Qual</title>
-    <url>/2025/04/01/dicectf2025/</url>
-    <content><![CDATA[<p>Time: 2025.03.29-31 (online)</p>
-<h2 id="fairy-ring-7-solves"><a href="#fairy-ring-7-solves" class="headerlink" title="fairy-ring (7 solves)"></a>fairy-ring (7 solves)</h2><p><a href="https://priv.pub/posts/dicectf-quals-2025/#fairy-ring">Original Writeup</a></p>
-<p><a href="https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring">https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring</a></p>
-<blockquote>
-<ul>
-<li><a href="fairy-ring/server.py">server.py</a></li>
-<li><a href="https://github.com/mjosaarinen/uov-py/tree/main">https://github.com/mjosaarinen/uov-py/tree/main</a></li>
-<li><ul>
-<li><a href="fairy-ring/uov.py">uov.py</a></li>
-</ul>
-</li>
-<li><ul>
-<li><a href="fairy-ring/uov_trapdoor.py">uov_trapdoor.py</a></li>
-</ul>
-</li>
-<li>keys</li>
-</ul>
-</blockquote>
-<p>Also check this <a href="https://priv.pub/posts/rainbow-attack/">defund’s gift</a> and this <a href="https://eprint.iacr.org/2020/1343.pdf">Improved cryptanalysis of UOV and Rainbow</a>!</p>
-<p>A good chance to learn more about MQ and UOV.</p>
-<h3 id="Multivariate-Quadratic"><a href="#Multivariate-Quadratic" class="headerlink" title="Multivariate Quadratic"></a>Multivariate Quadratic</h3><p>A Multivariate Quadratic (MQ) is a polynomial in $n$ variables over $\mathbb{F_q}$: $f(x_1, …, x_n) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j + \sum_i^n b_{i} x_i + c$. We can represent it with matrix: $f(\vec{x}) &#x3D; \vec{x}^\top  A  \vec{x} + \vec{b}^\top  \vec{x} + c$.</p>
-<p>A Multivariate Quadratic Map $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ is a collection of such polynomials $f_1, …, f_m$ where:<br>$$\mathcal{F}(\vec{x}) &#x3D; (f_1(\vec{x}), …, f_m(\vec{x}))$$</p>
-<p>Multivariate Quadratic Problem (MQP): Given arbitrary $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ and $\vec{t} \in \mathbb{F_q^m}$, it’s NP-hard to find $\mathcal{F}(\vec{s}) &#x3D; \vec{t}$. </p>
-<h3 id="Polar-Form"><a href="#Polar-Form" class="headerlink" title="Polar Form"></a>Polar Form</h3><p>It’s clear that:<br>$$<br>\begin{aligned}<br>f(\vec{x} + \vec{y}) &amp;&#x3D; (\vec{x} + \vec{y})^\top  A  (\vec{x} + \vec{y}) + \vec{b}^\top  (\vec{x} + \vec{y}) + c \\<br>&amp;&#x3D; f(\vec{x}) + f(\vec{y}) - f(\vec{0}) + \vec{x}^\top  (A + A^\top)  \vec{y} \\<br>\end{aligned}<br>$$</p>
-<p>And we have the polar form: $f’(\vec{x}, \vec{y}) &#x3D; \vec{x}^\top  (A + A^\top)  \vec{y} &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y}) + f(\vec{0})$. This also works for a Multivariate Quadratic Map: $\mathcal{F}’(\vec{x}, \vec{y}) &#x3D; \mathcal{F}(\vec{x} + \vec{y}) - \mathcal{F}(\vec{x}) - \mathcal{F}(\vec{y}) + \mathcal{F}(\vec{0})$.</p>
-<h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><p>We mainly focus on the quadratic part of a MQ, which serves as the core of the hardness. So we usually have $f(\vec{x}) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j &#x3D; \vec{x}^\top  A  \vec{x}$. One can always find a symmertric $A$ since $\vec{x}^\top  A  \vec{x} &#x3D; \vec{x}^\top  A^\top  \vec{x} &#x3D; \vec{x}^\top  (\frac{A + A^\top}{2})  \vec{x}$. We can further simplify $A$ into a upper triangular matrix, which is more intuitive and leads to less storage overhead.</p>
-<p>And the polar form: $f’(\vec{x}, \vec{y}) &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y})$.</p>
-<h3 id="UOV-Signature"><a href="#UOV-Signature" class="headerlink" title="UOV Signature"></a>UOV Signature</h3><p>The Unbalanced Oil and Vinegar (UOV) scheme is a signature scheme based on MQ.</p>
-<p>First we construct an easy-to-solve MQ $f(\vec{x}) &#x3D; \sum_i^n \sum_{j &gt; m}^n a_{i,j} x_i x_j$. Here we call oil variables $\vec{x_o} &#x3D; (x_1, …, x_m, 0, …, 0)$ and vinegar variables $\vec{x_v} &#x3D; (0, …, 0, x_{m+1}, …, x_{m+v})$ (where $n &#x3D; m+v$), and it’s clear that $\mathcal{F}$ is linear to $\vec{x_o}$. By randomly choosing $\vec{x_v}$, one can solve the linear system to get the answer.</p>
-<p>Matrix form:<br>$$<br>A &#x3D; \begin{bmatrix}<br>O_{m \times m} &amp; B_{m \times v} \\<br>O_{v \times m} &amp; C_{v \times v}<br>\end{bmatrix}<br>\rightarrow<br>(\vec{x_o} + \vec{x_v})^\top  A  (\vec{x_o} + \vec{x_v}) &#x3D; \vec{x_o}’^\top  B  \vec{x_v}’ + \vec{x_v}’^\top  C  \vec{x_v}’<br>$$</p>
-<p>Polar form:<br>$$<br>\mathcal{F}(\vec{x_o}) &#x3D; \vec{0} \rightarrow \mathcal{F}(\vec{x_o} + \vec{x_v}) &#x3D; \mathcal{F}’(\vec{x_o}, \vec{x_v}) + \mathcal{F}(\vec{x_v})<br>$$</p>
-<p>In UOV, we use $\mathcal{F}$ as the private key and the public key is $\mathcal{P} &#x3D; \mathcal{F} \circ \mathcal{T}$, where $\mathcal{T}$ is an invertable linear transformation. For a message $m$, the signature $\vec{s}$ satisfies $\mathcal{P}(\vec{s}) &#x3D; \mathcal{Hash}(m)$. The signer just solves $\mathcal{F}(\vec{x}) &#x3D; \mathcal{Hash}(m)$ and computes $\vec{s} &#x3D; \mathcal{T}^{-1}(\vec{x})$.</p>
-<p>The main idea is to find a linear space $\mathcal{O}$ with rank $r \geq m$, and for all $\vec{o} \in \mathcal{O}$ we have $\mathcal{P}(\vec{o}) &#x3D; \vec{0}$. It’s also worth mentioning that for any valid signature $\vec{s}$, $\vec{s} + \mathcal{O}$ is still valid.</p>
-<h3 id="Ring-Signature"><a href="#Ring-Signature" class="headerlink" title="Ring Signature"></a>Ring Signature</h3><p>In this challenge, we have a ring signature scheme based on UOV. Any one of the $n$ users can generate a signature on behalf of the group, and no one can distinguish the signer.</p>
-<ul>
-<li>$\mathcal{Setup}:$ Each user generates a UOV key pair $(\mathcal{P}, \mathcal{F})$.</li>
-<li>$\mathcal{Sign}:$ For message $m$, user $a$ randomly chooses $(\vec{x_1}, …, \vec{x_{a-1}}, \vec{x_{a+1}},…, \vec{x_n})$ and compute $\vec{t} &#x3D; \mathcal{Hash}(m) - \sum_{i \neq a}^n \mathcal{P_i}(\vec{x_i})$. Then user $a$ solve $\mathcal{P_a}(\vec{x_a}) &#x3D; \vec{t}$ with the private key $\mathcal{F_a}$. The signature is $(\vec{x_1}, …, \vec{x_n})$.</li>
-<li>$\mathcal{Verify}:$ Check whether $\mathcal{Hash}(m) &#x3D; \sum_{i}^n \mathcal{P_i}(\vec{x_i})$ satisfies.</li>
-</ul>
-<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>The solution is easy but elegant.</p>
-<p>We can pick the same public key more than once, and actually it’s possible for us to forge a valid signature for any message (yeah it’s completely broken). Consider a public key $\mathcal{P}$, we have</p>
-<p>$$\vec{t} &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x}) &#x3D; \mathcal{P}’(\vec{x}, \vec{y}) + \mathcal{P}(\vec{y})$$</p>
-<p>Here $\vec{t}$ is linear to $\vec{x}$, that’s all we need to solve this challenge. For a given message $m$, we can pick the same public key $\mathcal{P}$ twice, then randomly choose a $\vec{y}$ and find the solution $\mathcal{Hash}(m) &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x})$ (it’s the same for ‘$+$’ and ‘$\oplus$’ on $\mathbb{F_{2^8}}$). And $(\vec{x} + \vec{y}, \vec{x})$ is a valid signature.</p>
-<p><a href="fairy-ring/exp.py">exp.py</a></p>
-]]></content>
-      <tags>
-        <tag>UOV</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hitcon CTF 2025</title>
     <url>/2025/08/25/hitconctf2025/</url>
     <content><![CDATA[<p>I played Hitcon CTF last weekend with r3kapig, enjoyed.</p>
@@ -408,6 +356,58 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
       <tags>
         <tag>LLL</tag>
         <tag>Fiat-Shamir</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fairy-ring::Dice CTF 2025 Qual</title>
+    <url>/2025/04/01/dicectf2025/</url>
+    <content><![CDATA[<p>Time: 2025.03.29-31 (online)</p>
+<h2 id="fairy-ring-7-solves"><a href="#fairy-ring-7-solves" class="headerlink" title="fairy-ring (7 solves)"></a>fairy-ring (7 solves)</h2><p><a href="https://priv.pub/posts/dicectf-quals-2025/#fairy-ring">Original Writeup</a></p>
+<p><a href="https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring">https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring</a></p>
+<blockquote>
+<ul>
+<li><a href="fairy-ring/server.py">server.py</a></li>
+<li><a href="https://github.com/mjosaarinen/uov-py/tree/main">https://github.com/mjosaarinen/uov-py/tree/main</a></li>
+<li><ul>
+<li><a href="fairy-ring/uov.py">uov.py</a></li>
+</ul>
+</li>
+<li><ul>
+<li><a href="fairy-ring/uov_trapdoor.py">uov_trapdoor.py</a></li>
+</ul>
+</li>
+<li>keys</li>
+</ul>
+</blockquote>
+<p>Also check this <a href="https://priv.pub/posts/rainbow-attack/">defund’s gift</a> and this <a href="https://eprint.iacr.org/2020/1343.pdf">Improved cryptanalysis of UOV and Rainbow</a>!</p>
+<p>A good chance to learn more about MQ and UOV.</p>
+<h3 id="Multivariate-Quadratic"><a href="#Multivariate-Quadratic" class="headerlink" title="Multivariate Quadratic"></a>Multivariate Quadratic</h3><p>A Multivariate Quadratic (MQ) is a polynomial in $n$ variables over $\mathbb{F_q}$: $f(x_1, …, x_n) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j + \sum_i^n b_{i} x_i + c$. We can represent it with matrix: $f(\vec{x}) &#x3D; \vec{x}^\top  A  \vec{x} + \vec{b}^\top  \vec{x} + c$.</p>
+<p>A Multivariate Quadratic Map $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ is a collection of such polynomials $f_1, …, f_m$ where:<br>$$\mathcal{F}(\vec{x}) &#x3D; (f_1(\vec{x}), …, f_m(\vec{x}))$$</p>
+<p>Multivariate Quadratic Problem (MQP): Given arbitrary $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ and $\vec{t} \in \mathbb{F_q^m}$, it’s NP-hard to find $\mathcal{F}(\vec{s}) &#x3D; \vec{t}$. </p>
+<h3 id="Polar-Form"><a href="#Polar-Form" class="headerlink" title="Polar Form"></a>Polar Form</h3><p>It’s clear that:<br>$$<br>\begin{aligned}<br>f(\vec{x} + \vec{y}) &amp;&#x3D; (\vec{x} + \vec{y})^\top  A  (\vec{x} + \vec{y}) + \vec{b}^\top  (\vec{x} + \vec{y}) + c \\<br>&amp;&#x3D; f(\vec{x}) + f(\vec{y}) - f(\vec{0}) + \vec{x}^\top  (A + A^\top)  \vec{y} \\<br>\end{aligned}<br>$$</p>
+<p>And we have the polar form: $f’(\vec{x}, \vec{y}) &#x3D; \vec{x}^\top  (A + A^\top)  \vec{y} &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y}) + f(\vec{0})$. This also works for a Multivariate Quadratic Map: $\mathcal{F}’(\vec{x}, \vec{y}) &#x3D; \mathcal{F}(\vec{x} + \vec{y}) - \mathcal{F}(\vec{x}) - \mathcal{F}(\vec{y}) + \mathcal{F}(\vec{0})$.</p>
+<h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><p>We mainly focus on the quadratic part of a MQ, which serves as the core of the hardness. So we usually have $f(\vec{x}) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j &#x3D; \vec{x}^\top  A  \vec{x}$. One can always find a symmertric $A$ since $\vec{x}^\top  A  \vec{x} &#x3D; \vec{x}^\top  A^\top  \vec{x} &#x3D; \vec{x}^\top  (\frac{A + A^\top}{2})  \vec{x}$. We can further simplify $A$ into a upper triangular matrix, which is more intuitive and leads to less storage overhead.</p>
+<p>And the polar form: $f’(\vec{x}, \vec{y}) &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y})$.</p>
+<h3 id="UOV-Signature"><a href="#UOV-Signature" class="headerlink" title="UOV Signature"></a>UOV Signature</h3><p>The Unbalanced Oil and Vinegar (UOV) scheme is a signature scheme based on MQ.</p>
+<p>First we construct an easy-to-solve MQ $f(\vec{x}) &#x3D; \sum_i^n \sum_{j &gt; m}^n a_{i,j} x_i x_j$. Here we call oil variables $\vec{x_o} &#x3D; (x_1, …, x_m, 0, …, 0)$ and vinegar variables $\vec{x_v} &#x3D; (0, …, 0, x_{m+1}, …, x_{m+v})$ (where $n &#x3D; m+v$), and it’s clear that $\mathcal{F}$ is linear to $\vec{x_o}$. By randomly choosing $\vec{x_v}$, one can solve the linear system to get the answer.</p>
+<p>Matrix form:<br>$$<br>A &#x3D; \begin{bmatrix}<br>O_{m \times m} &amp; B_{m \times v} \\<br>O_{v \times m} &amp; C_{v \times v}<br>\end{bmatrix}<br>\rightarrow<br>(\vec{x_o} + \vec{x_v})^\top  A  (\vec{x_o} + \vec{x_v}) &#x3D; \vec{x_o}’^\top  B  \vec{x_v}’ + \vec{x_v}’^\top  C  \vec{x_v}’<br>$$</p>
+<p>Polar form:<br>$$<br>\mathcal{F}(\vec{x_o}) &#x3D; \vec{0} \rightarrow \mathcal{F}(\vec{x_o} + \vec{x_v}) &#x3D; \mathcal{F}’(\vec{x_o}, \vec{x_v}) + \mathcal{F}(\vec{x_v})<br>$$</p>
+<p>In UOV, we use $\mathcal{F}$ as the private key and the public key is $\mathcal{P} &#x3D; \mathcal{F} \circ \mathcal{T}$, where $\mathcal{T}$ is an invertable linear transformation. For a message $m$, the signature $\vec{s}$ satisfies $\mathcal{P}(\vec{s}) &#x3D; \mathcal{Hash}(m)$. The signer just solves $\mathcal{F}(\vec{x}) &#x3D; \mathcal{Hash}(m)$ and computes $\vec{s} &#x3D; \mathcal{T}^{-1}(\vec{x})$.</p>
+<p>The main idea is to find a linear space $\mathcal{O}$ with rank $r \geq m$, and for all $\vec{o} \in \mathcal{O}$ we have $\mathcal{P}(\vec{o}) &#x3D; \vec{0}$. It’s also worth mentioning that for any valid signature $\vec{s}$, $\vec{s} + \mathcal{O}$ is still valid.</p>
+<h3 id="Ring-Signature"><a href="#Ring-Signature" class="headerlink" title="Ring Signature"></a>Ring Signature</h3><p>In this challenge, we have a ring signature scheme based on UOV. Any one of the $n$ users can generate a signature on behalf of the group, and no one can distinguish the signer.</p>
+<ul>
+<li>$\mathcal{Setup}:$ Each user generates a UOV key pair $(\mathcal{P}, \mathcal{F})$.</li>
+<li>$\mathcal{Sign}:$ For message $m$, user $a$ randomly chooses $(\vec{x_1}, …, \vec{x_{a-1}}, \vec{x_{a+1}},…, \vec{x_n})$ and compute $\vec{t} &#x3D; \mathcal{Hash}(m) - \sum_{i \neq a}^n \mathcal{P_i}(\vec{x_i})$. Then user $a$ solve $\mathcal{P_a}(\vec{x_a}) &#x3D; \vec{t}$ with the private key $\mathcal{F_a}$. The signature is $(\vec{x_1}, …, \vec{x_n})$.</li>
+<li>$\mathcal{Verify}:$ Check whether $\mathcal{Hash}(m) &#x3D; \sum_{i}^n \mathcal{P_i}(\vec{x_i})$ satisfies.</li>
+</ul>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>The solution is easy but elegant.</p>
+<p>We can pick the same public key more than once, and actually it’s possible for us to forge a valid signature for any message (yeah it’s completely broken). Consider a public key $\mathcal{P}$, we have</p>
+<p>$$\vec{t} &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x}) &#x3D; \mathcal{P}’(\vec{x}, \vec{y}) + \mathcal{P}(\vec{y})$$</p>
+<p>Here $\vec{t}$ is linear to $\vec{x}$, that’s all we need to solve this challenge. For a given message $m$, we can pick the same public key $\mathcal{P}$ twice, then randomly choose a $\vec{y}$ and find the solution $\mathcal{Hash}(m) &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x})$ (it’s the same for ‘$+$’ and ‘$\oplus$’ on $\mathbb{F_{2^8}}$). And $(\vec{x} + \vec{y}, \vec{x})$ is a valid signature.</p>
+<p><a href="fairy-ring/exp.py">exp.py</a></p>
+]]></content>
+      <tags>
+        <tag>UOV</tag>
       </tags>
   </entry>
   <entry>
