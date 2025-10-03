@@ -14,7 +14,7 @@
 <meta property="og:description" content="I played Hitcon CTF last weekend with r3kapig, enjoyed. MRSA  chall.py   In this challenge, we need to recover a $k \cdot k$ small (8bit) secret matrix $M$ with $C &#x3D; M^e \pmod{n}$, where $n$ is o">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2025-08-25T02:12:00.000Z">
-<meta property="article:modified_time" content="2025-08-31T05:57:38.747Z">
+<meta property="article:modified_time" content="2025-09-28T18:10:35.543Z">
 <meta property="article:author" content="rec">
 <meta property="article:tag" content="LLL">
 <meta property="article:tag" content="Fiat-Shamir">
@@ -95,6 +95,8 @@
     <span id="actions">
       <ul>
         
+        <li><a class="icon" aria-label="Previous post" href="/2025/09/29/srdnlenctffinal2025/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
         
         <li><a class="icon" aria-label="Next post" href="/2025/07/23/sageenv/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -153,7 +155,7 @@
       
         <time datetime="2025-08-25T02:12:00.000Z" class="dt-published" itemprop="datePublished">2025-08-25</time>
         
-        (Updated: <time datetime="2025-08-31T05:57:38.747Z" class="dt-updated" itemprop="dateModified">2025-08-31</time>)
+        (Updated: <time datetime="2025-09-28T18:10:35.543Z" class="dt-updated" itemprop="dateModified">2025-09-29</time>)
         
       
     </div>
@@ -225,9 +227,14 @@
 <p>Now <code>c</code> is the same in each round, we can focus on how to construct a valid <code>Grs</code> to get the target <code>c</code>. We can generate a set of <code>zs</code> and the corresponding <code>Grs</code> first. Consider there exists a valid subset of <code>Grs</code> satisfying our target, we have:</p>
 <p>$$<br>c &#x3D; \Sigma_{i} k_i \cdot \mathcal{H}(Gr_i) \pmod{q}<br>$$</p>
 <p>where $k_i$ is a binary variable and $\mathcal{H}$ is the hash function <code>hash_point</code>. This is a typical knapsack problem, and we can try to find a solution with <code>LLL</code>.</p>
-<h2 id="Paranoid"><a href="#Paranoid" class="headerlink" title="(*)Paranoid"></a>(*)Paranoid</h2><p>In this challenge we need to break a zkp protocol with <strong>NOT THAT BAD</strong> Fiat-Shamir Transformation.</p>
+<h2 id="Paranoid"><a href="#Paranoid" class="headerlink" title="(*)Paranoid"></a>(*)Paranoid</h2><blockquote>
+<ul>
+<li><a href="Paranoid/server.py">server.py</a></li>
+</ul>
+</blockquote>
+<p>In this challenge we need to break a zkp protocol with <strong>NOT THAT BAD</strong> Fiat-Shamir Transformation.</p>
 <h3 id="Some-Discussions"><a href="#Some-Discussions" class="headerlink" title="Some Discussions"></a>Some Discussions</h3><p>For this one, we can still <strong>1)</strong> fix the <code>c</code> first, and <strong>2)</strong> construct a valid <code>Grs</code> to get <code>c</code>. But this time we’re not able to find a fixed point, so the iteration part is unavoidable. </p>
-<p>TBD XD</p>
+<p>In this case, we may have to fix a <code>c</code> and randomly get <code>k</code> groups of <code>Grs</code>, picking one out of each group to combine <code>c</code>. This leads to a <code>k</code>-sum problem, while wagner algorithm is an efficient way to solve it. I found a python-implemented version to use, but that’s not enough for this problem. Maybe cpp and careful optimization are necessary for this challenge ig.</p>
 
   </div>
 </article>
