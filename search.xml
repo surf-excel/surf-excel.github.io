@@ -294,58 +294,6 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
       </tags>
   </entry>
   <entry>
-    <title>fairy-ring::Dice CTF 2025 Qual</title>
-    <url>/2025/04/01/dicectf2025/</url>
-    <content><![CDATA[<p>Time: 2025.03.29-31 (online)</p>
-<h2 id="fairy-ring-7-solves"><a href="#fairy-ring-7-solves" class="headerlink" title="fairy-ring (7 solves)"></a>fairy-ring (7 solves)</h2><p><a href="https://priv.pub/posts/dicectf-quals-2025/#fairy-ring">Original Writeup</a></p>
-<p><a href="https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring">https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring</a></p>
-<blockquote>
-<ul>
-<li><a href="fairy-ring/server.py">server.py</a></li>
-<li><a href="https://github.com/mjosaarinen/uov-py/tree/main">https://github.com/mjosaarinen/uov-py/tree/main</a></li>
-<li><ul>
-<li><a href="fairy-ring/uov.py">uov.py</a></li>
-</ul>
-</li>
-<li><ul>
-<li><a href="fairy-ring/uov_trapdoor.py">uov_trapdoor.py</a></li>
-</ul>
-</li>
-<li>keys</li>
-</ul>
-</blockquote>
-<p>Also check this <a href="https://priv.pub/posts/rainbow-attack/">defund’s gift</a> and this <a href="https://eprint.iacr.org/2020/1343.pdf">Improved cryptanalysis of UOV and Rainbow</a>!</p>
-<p>A good chance to learn more about MQ and UOV.</p>
-<h3 id="Multivariate-Quadratic"><a href="#Multivariate-Quadratic" class="headerlink" title="Multivariate Quadratic"></a>Multivariate Quadratic</h3><p>A Multivariate Quadratic (MQ) is a polynomial in $n$ variables over $\mathbb{F_q}$: $f(x_1, …, x_n) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j + \sum_i^n b_{i} x_i + c$. We can represent it with matrix: $f(\vec{x}) &#x3D; \vec{x}^\top  A  \vec{x} + \vec{b}^\top  \vec{x} + c$.</p>
-<p>A Multivariate Quadratic Map $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ is a collection of such polynomials $f_1, …, f_m$ where:<br>$$\mathcal{F}(\vec{x}) &#x3D; (f_1(\vec{x}), …, f_m(\vec{x}))$$</p>
-<p>Multivariate Quadratic Problem (MQP): Given arbitrary $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ and $\vec{t} \in \mathbb{F_q^m}$, it’s NP-hard to find $\mathcal{F}(\vec{s}) &#x3D; \vec{t}$. </p>
-<h3 id="Polar-Form"><a href="#Polar-Form" class="headerlink" title="Polar Form"></a>Polar Form</h3><p>It’s clear that:<br>$$<br>\begin{aligned}<br>f(\vec{x} + \vec{y}) &amp;&#x3D; (\vec{x} + \vec{y})^\top  A  (\vec{x} + \vec{y}) + \vec{b}^\top  (\vec{x} + \vec{y}) + c \\<br>&amp;&#x3D; f(\vec{x}) + f(\vec{y}) - f(\vec{0}) + \vec{x}^\top  (A + A^\top)  \vec{y} \\<br>\end{aligned}<br>$$</p>
-<p>And we have the polar form: $f’(\vec{x}, \vec{y}) &#x3D; \vec{x}^\top  (A + A^\top)  \vec{y} &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y}) + f(\vec{0})$. This also works for a Multivariate Quadratic Map: $\mathcal{F}’(\vec{x}, \vec{y}) &#x3D; \mathcal{F}(\vec{x} + \vec{y}) - \mathcal{F}(\vec{x}) - \mathcal{F}(\vec{y}) + \mathcal{F}(\vec{0})$.</p>
-<h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><p>We mainly focus on the quadratic part of a MQ, which serves as the core of the hardness. So we usually have $f(\vec{x}) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j &#x3D; \vec{x}^\top  A  \vec{x}$. One can always find a symmertric $A$ since $\vec{x}^\top  A  \vec{x} &#x3D; \vec{x}^\top  A^\top  \vec{x} &#x3D; \vec{x}^\top  (\frac{A + A^\top}{2})  \vec{x}$. We can further simplify $A$ into a upper triangular matrix, which is more intuitive and leads to less storage overhead.</p>
-<p>And the polar form: $f’(\vec{x}, \vec{y}) &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y})$.</p>
-<h3 id="UOV-Signature"><a href="#UOV-Signature" class="headerlink" title="UOV Signature"></a>UOV Signature</h3><p>The Unbalanced Oil and Vinegar (UOV) scheme is a signature scheme based on MQ.</p>
-<p>First we construct an easy-to-solve MQ $f(\vec{x}) &#x3D; \sum_i^n \sum_{j &gt; m}^n a_{i,j} x_i x_j$. Here we call oil variables $\vec{x_o} &#x3D; (x_1, …, x_m, 0, …, 0)$ and vinegar variables $\vec{x_v} &#x3D; (0, …, 0, x_{m+1}, …, x_{m+v})$ (where $n &#x3D; m+v$), and it’s clear that $\mathcal{F}$ is linear to $\vec{x_o}$. By randomly choosing $\vec{x_v}$, one can solve the linear system to get the answer.</p>
-<p>Matrix form:<br>$$<br>A &#x3D; \begin{bmatrix}<br>O_{m \times m} &amp; B_{m \times v} \\<br>O_{v \times m} &amp; C_{v \times v}<br>\end{bmatrix}<br>\rightarrow<br>(\vec{x_o} + \vec{x_v})^\top  A  (\vec{x_o} + \vec{x_v}) &#x3D; \vec{x_o}’^\top  B  \vec{x_v}’ + \vec{x_v}’^\top  C  \vec{x_v}’<br>$$</p>
-<p>Polar form:<br>$$<br>\mathcal{F}(\vec{x_o}) &#x3D; \vec{0} \rightarrow \mathcal{F}(\vec{x_o} + \vec{x_v}) &#x3D; \mathcal{F}’(\vec{x_o}, \vec{x_v}) + \mathcal{F}(\vec{x_v})<br>$$</p>
-<p>In UOV, we use $\mathcal{F}$ as the private key and the public key is $\mathcal{P} &#x3D; \mathcal{F} \circ \mathcal{T}$, where $\mathcal{T}$ is an invertable linear transformation. For a message $m$, the signature $\vec{s}$ satisfies $\mathcal{P}(\vec{s}) &#x3D; \mathcal{Hash}(m)$. The signer just solves $\mathcal{F}(\vec{x}) &#x3D; \mathcal{Hash}(m)$ and computes $\vec{s} &#x3D; \mathcal{T}^{-1}(\vec{x})$.</p>
-<p>The main idea is to find a linear space $\mathcal{O}$ with rank $r \geq m$, and for all $\vec{o} \in \mathcal{O}$ we have $\mathcal{P}(\vec{o}) &#x3D; \vec{0}$. It’s also worth mentioning that for any valid signature $\vec{s}$, $\vec{s} + \mathcal{O}$ is still valid.</p>
-<h3 id="Ring-Signature"><a href="#Ring-Signature" class="headerlink" title="Ring Signature"></a>Ring Signature</h3><p>In this challenge, we have a ring signature scheme based on UOV. Any one of the $n$ users can generate a signature on behalf of the group, and no one can distinguish the signer.</p>
-<ul>
-<li>$\mathcal{Setup}:$ Each user generates a UOV key pair $(\mathcal{P}, \mathcal{F})$.</li>
-<li>$\mathcal{Sign}:$ For message $m$, user $a$ randomly chooses $(\vec{x_1}, …, \vec{x_{a-1}}, \vec{x_{a+1}},…, \vec{x_n})$ and compute $\vec{t} &#x3D; \mathcal{Hash}(m) - \sum_{i \neq a}^n \mathcal{P_i}(\vec{x_i})$. Then user $a$ solve $\mathcal{P_a}(\vec{x_a}) &#x3D; \vec{t}$ with the private key $\mathcal{F_a}$. The signature is $(\vec{x_1}, …, \vec{x_n})$.</li>
-<li>$\mathcal{Verify}:$ Check whether $\mathcal{Hash}(m) &#x3D; \sum_{i}^n \mathcal{P_i}(\vec{x_i})$ satisfies.</li>
-</ul>
-<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>The solution is easy but elegant.</p>
-<p>We can pick the same public key more than once, and actually it’s possible for us to forge a valid signature for any message (yeah it’s completely broken). Consider a public key $\mathcal{P}$, we have</p>
-<p>$$\vec{t} &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x}) &#x3D; \mathcal{P}’(\vec{x}, \vec{y}) + \mathcal{P}(\vec{y})$$</p>
-<p>Here $\vec{t}$ is linear to $\vec{x}$, that’s all we need to solve this challenge. For a given message $m$, we can pick the same public key $\mathcal{P}$ twice, then randomly choose a $\vec{y}$ and find the solution $\mathcal{Hash}(m) &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x})$ (it’s the same for ‘$+$’ and ‘$\oplus$’ on $\mathbb{F_{2^8}}$). And $(\vec{x} + \vec{y}, \vec{x})$ is a valid signature.</p>
-<p><a href="fairy-ring/exp.py">exp.py</a></p>
-]]></content>
-      <tags>
-        <tag>UOV</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hitcon CTF 2025</title>
     <url>/2025/08/25/hitconctf2025/</url>
     <content><![CDATA[<p>I played Hitcon CTF last weekend with r3kapig, enjoyed.</p>
@@ -412,6 +360,58 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
       <tags>
         <tag>LLL</tag>
         <tag>Fiat-Shamir</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fairy-ring::Dice CTF 2025 Qual</title>
+    <url>/2025/04/01/dicectf2025/</url>
+    <content><![CDATA[<p>Time: 2025.03.29-31 (online)</p>
+<h2 id="fairy-ring-7-solves"><a href="#fairy-ring-7-solves" class="headerlink" title="fairy-ring (7 solves)"></a>fairy-ring (7 solves)</h2><p><a href="https://priv.pub/posts/dicectf-quals-2025/#fairy-ring">Original Writeup</a></p>
+<p><a href="https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring">https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring</a></p>
+<blockquote>
+<ul>
+<li><a href="fairy-ring/server.py">server.py</a></li>
+<li><a href="https://github.com/mjosaarinen/uov-py/tree/main">https://github.com/mjosaarinen/uov-py/tree/main</a></li>
+<li><ul>
+<li><a href="fairy-ring/uov.py">uov.py</a></li>
+</ul>
+</li>
+<li><ul>
+<li><a href="fairy-ring/uov_trapdoor.py">uov_trapdoor.py</a></li>
+</ul>
+</li>
+<li>keys</li>
+</ul>
+</blockquote>
+<p>Also check this <a href="https://priv.pub/posts/rainbow-attack/">defund’s gift</a> and this <a href="https://eprint.iacr.org/2020/1343.pdf">Improved cryptanalysis of UOV and Rainbow</a>!</p>
+<p>A good chance to learn more about MQ and UOV.</p>
+<h3 id="Multivariate-Quadratic"><a href="#Multivariate-Quadratic" class="headerlink" title="Multivariate Quadratic"></a>Multivariate Quadratic</h3><p>A Multivariate Quadratic (MQ) is a polynomial in $n$ variables over $\mathbb{F_q}$: $f(x_1, …, x_n) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j + \sum_i^n b_{i} x_i + c$. We can represent it with matrix: $f(\vec{x}) &#x3D; \vec{x}^\top  A  \vec{x} + \vec{b}^\top  \vec{x} + c$.</p>
+<p>A Multivariate Quadratic Map $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ is a collection of such polynomials $f_1, …, f_m$ where:<br>$$\mathcal{F}(\vec{x}) &#x3D; (f_1(\vec{x}), …, f_m(\vec{x}))$$</p>
+<p>Multivariate Quadratic Problem (MQP): Given arbitrary $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ and $\vec{t} \in \mathbb{F_q^m}$, it’s NP-hard to find $\mathcal{F}(\vec{s}) &#x3D; \vec{t}$. </p>
+<h3 id="Polar-Form"><a href="#Polar-Form" class="headerlink" title="Polar Form"></a>Polar Form</h3><p>It’s clear that:<br>$$<br>\begin{aligned}<br>f(\vec{x} + \vec{y}) &amp;&#x3D; (\vec{x} + \vec{y})^\top  A  (\vec{x} + \vec{y}) + \vec{b}^\top  (\vec{x} + \vec{y}) + c \\<br>&amp;&#x3D; f(\vec{x}) + f(\vec{y}) - f(\vec{0}) + \vec{x}^\top  (A + A^\top)  \vec{y} \\<br>\end{aligned}<br>$$</p>
+<p>And we have the polar form: $f’(\vec{x}, \vec{y}) &#x3D; \vec{x}^\top  (A + A^\top)  \vec{y} &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y}) + f(\vec{0})$. This also works for a Multivariate Quadratic Map: $\mathcal{F}’(\vec{x}, \vec{y}) &#x3D; \mathcal{F}(\vec{x} + \vec{y}) - \mathcal{F}(\vec{x}) - \mathcal{F}(\vec{y}) + \mathcal{F}(\vec{0})$.</p>
+<h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><p>We mainly focus on the quadratic part of a MQ, which serves as the core of the hardness. So we usually have $f(\vec{x}) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j &#x3D; \vec{x}^\top  A  \vec{x}$. One can always find a symmertric $A$ since $\vec{x}^\top  A  \vec{x} &#x3D; \vec{x}^\top  A^\top  \vec{x} &#x3D; \vec{x}^\top  (\frac{A + A^\top}{2})  \vec{x}$. We can further simplify $A$ into a upper triangular matrix, which is more intuitive and leads to less storage overhead.</p>
+<p>And the polar form: $f’(\vec{x}, \vec{y}) &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y})$.</p>
+<h3 id="UOV-Signature"><a href="#UOV-Signature" class="headerlink" title="UOV Signature"></a>UOV Signature</h3><p>The Unbalanced Oil and Vinegar (UOV) scheme is a signature scheme based on MQ.</p>
+<p>First we construct an easy-to-solve MQ $f(\vec{x}) &#x3D; \sum_i^n \sum_{j &gt; m}^n a_{i,j} x_i x_j$. Here we call oil variables $\vec{x_o} &#x3D; (x_1, …, x_m, 0, …, 0)$ and vinegar variables $\vec{x_v} &#x3D; (0, …, 0, x_{m+1}, …, x_{m+v})$ (where $n &#x3D; m+v$), and it’s clear that $\mathcal{F}$ is linear to $\vec{x_o}$. By randomly choosing $\vec{x_v}$, one can solve the linear system to get the answer.</p>
+<p>Matrix form:<br>$$<br>A &#x3D; \begin{bmatrix}<br>O_{m \times m} &amp; B_{m \times v} \\<br>O_{v \times m} &amp; C_{v \times v}<br>\end{bmatrix}<br>\rightarrow<br>(\vec{x_o} + \vec{x_v})^\top  A  (\vec{x_o} + \vec{x_v}) &#x3D; \vec{x_o}’^\top  B  \vec{x_v}’ + \vec{x_v}’^\top  C  \vec{x_v}’<br>$$</p>
+<p>Polar form:<br>$$<br>\mathcal{F}(\vec{x_o}) &#x3D; \vec{0} \rightarrow \mathcal{F}(\vec{x_o} + \vec{x_v}) &#x3D; \mathcal{F}’(\vec{x_o}, \vec{x_v}) + \mathcal{F}(\vec{x_v})<br>$$</p>
+<p>In UOV, we use $\mathcal{F}$ as the private key and the public key is $\mathcal{P} &#x3D; \mathcal{F} \circ \mathcal{T}$, where $\mathcal{T}$ is an invertable linear transformation. For a message $m$, the signature $\vec{s}$ satisfies $\mathcal{P}(\vec{s}) &#x3D; \mathcal{Hash}(m)$. The signer just solves $\mathcal{F}(\vec{x}) &#x3D; \mathcal{Hash}(m)$ and computes $\vec{s} &#x3D; \mathcal{T}^{-1}(\vec{x})$.</p>
+<p>The main idea is to find a linear space $\mathcal{O}$ with rank $r \geq m$, and for all $\vec{o} \in \mathcal{O}$ we have $\mathcal{P}(\vec{o}) &#x3D; \vec{0}$. It’s also worth mentioning that for any valid signature $\vec{s}$, $\vec{s} + \mathcal{O}$ is still valid.</p>
+<h3 id="Ring-Signature"><a href="#Ring-Signature" class="headerlink" title="Ring Signature"></a>Ring Signature</h3><p>In this challenge, we have a ring signature scheme based on UOV. Any one of the $n$ users can generate a signature on behalf of the group, and no one can distinguish the signer.</p>
+<ul>
+<li>$\mathcal{Setup}:$ Each user generates a UOV key pair $(\mathcal{P}, \mathcal{F})$.</li>
+<li>$\mathcal{Sign}:$ For message $m$, user $a$ randomly chooses $(\vec{x_1}, …, \vec{x_{a-1}}, \vec{x_{a+1}},…, \vec{x_n})$ and compute $\vec{t} &#x3D; \mathcal{Hash}(m) - \sum_{i \neq a}^n \mathcal{P_i}(\vec{x_i})$. Then user $a$ solve $\mathcal{P_a}(\vec{x_a}) &#x3D; \vec{t}$ with the private key $\mathcal{F_a}$. The signature is $(\vec{x_1}, …, \vec{x_n})$.</li>
+<li>$\mathcal{Verify}:$ Check whether $\mathcal{Hash}(m) &#x3D; \sum_{i}^n \mathcal{P_i}(\vec{x_i})$ satisfies.</li>
+</ul>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>The solution is easy but elegant.</p>
+<p>We can pick the same public key more than once, and actually it’s possible for us to forge a valid signature for any message (yeah it’s completely broken). Consider a public key $\mathcal{P}$, we have</p>
+<p>$$\vec{t} &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x}) &#x3D; \mathcal{P}’(\vec{x}, \vec{y}) + \mathcal{P}(\vec{y})$$</p>
+<p>Here $\vec{t}$ is linear to $\vec{x}$, that’s all we need to solve this challenge. For a given message $m$, we can pick the same public key $\mathcal{P}$ twice, then randomly choose a $\vec{y}$ and find the solution $\mathcal{Hash}(m) &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x})$ (it’s the same for ‘$+$’ and ‘$\oplus$’ on $\mathbb{F_{2^8}}$). And $(\vec{x} + \vec{y}, \vec{x})$ is a valid signature.</p>
+<p><a href="fairy-ring/exp.py">exp.py</a></p>
+]]></content>
+      <tags>
+        <tag>UOV</tag>
       </tags>
   </entry>
   <entry>
@@ -509,6 +509,58 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
 ]]></content>
       <tags>
         <tag>ZKP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>zk-Openings::Srdnlen CTF 2025 Qual</title>
+    <url>/2025/03/24/srdnlenctf2025/</url>
+    <content><![CDATA[<p>Time: 2025.01.19-20 (online)</p>
+<p>Interesting challenge, but I didn’t have enough time to solve it during the contest XDDD</p>
+<h2 id="zk-Openings-0-solve"><a href="#zk-Openings-0-solve" class="headerlink" title="zk-Openings (0 solve)"></a>zk-Openings (0 solve)</h2><blockquote>
+<ul>
+<li><a href="https://github.com/srdnlen/srdnlenctf-2025_public/tree/main/crypto_zk-openings/src">https://github.com/srdnlen/srdnlenctf-2025_public&#x2F;tree&#x2F;main&#x2F;crypto_zk-openings&#x2F;src</a></li>
+</ul>
+</blockquote>
+<p>I actually learnt a lot from the implementation, thank you @lrnzsir.</p>
+<h3 id="KZG-Commitment"><a href="#KZG-Commitment" class="headerlink" title="KZG Commitment"></a>KZG Commitment</h3><p>KZG commitment is a polynomial commitment scheme proposed by <a href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf">Kate et al in 2010</a>.</p>
+<p>While the original paper used a symmertric type-1 pairing, we prefer to use type-3 pairing these days. Basically we have three groups $(G_1, G_2, G_T)$ , two generators $(g_1 \in G_1, g_2 \in G_2)$, and a bilinear pairing function $e: G_1 \times G_2 \rightarrow G_T$. </p>
+<ol>
+<li>$\mathcal{Setup}(d) \rightarrow srs$: randomly samples a secret value $x$, and computes $srs &#x3D; (g_1^{x}, …, g_1^{x^d}, g_2^{x})$. While $x$ is considered to be “toxic waste”, it must be generated by trusted authority and deleted properly after use.</li>
+<li>$\mathcal{Commit}(srs, f) \rightarrow com$: computes the commitment $com &#x3D; g_1^{\Sigma_{i&#x3D;0}^d f_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{f_i}$ for the polynomial.</li>
+<li>$\mathcal{EvalProve}(srs, f, z) \rightarrow (\pi, f(z))$: computes a polynomial $q(x) &#x3D; \frac{f(x) - f(z)}{x-z}$. Then it computes the proof $\pi &#x3D; g_1^{\Sigma_{i&#x3D;0}^d q_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{q_i}$, proving that one knows the evaluation of $f$ over $z$.</li>
+<li>$\mathcal{EvalVerify}(srs, com, \pi, z, f(z)) \rightarrow 0&#x2F;1$: verifies the proof by checking $e(com \cdot g_1^{-f(z)}, g_2) \overset{?}{&#x3D;} e(\pi, g_2^{s} \cdot g_2^{-z})$.</li>
+</ol>
+<blockquote>
+<p>Note that KZG is a commitment (instead of ZKP) scheme. </p>
+</blockquote>
+<h3 id="The-Challenge"><a href="#The-Challenge" class="headerlink" title="The Challenge"></a>The Challenge</h3><p>For this challenge, we performs the KZG process on some secret polynomial $f$ and ended up with <code>opening.json</code>. Considering the difficulty of DLP under standard parameters, I actually just skip the content related to curve points. So basically we have $k&#x3D;20$ pairs of $(x_i, y_i&#x3D;f(x_i))$.</p>
+<p>And here is how we get the secret polynomial. </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> n <span class="keyword">in</span> AES.key_size <span class="comment"># 32</span></span><br><span class="line">key = os.urandom(n)</span><br><span class="line">evals = <span class="built_in">list</span>(key)</span><br><span class="line">poly = P(intt(evals))</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcg</span>(<span class="params">m: <span class="built_in">int</span>, a: <span class="built_in">int</span>, c: <span class="built_in">int</span>, x: <span class="built_in">int</span></span>) -&gt; <span class="string">&quot;Generator[int, None, None]&quot;</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Linear Congruential Generator &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        x = (a * x + c) % m</span><br><span class="line">        <span class="keyword">yield</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a, c, x = [secrets.randbelow(p) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)]</span><br><span class="line">rng = lcg(p, a, c, x)</span><br><span class="line"></span><br><span class="line">k = <span class="number">20</span></span><br><span class="line">hiding_poly = P([<span class="built_in">next</span>(rng) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k)])</span><br><span class="line">hidden_poly = poly + hiding_poly * Z_H</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(hidden_poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br></pre></td></tr></table></figure>
+
+<p>In short, we have a 32-degree polynomial $f(x)$ and a 20-degree polynomial $g(x)$, where $f(H_i) &#x3D; key_i$ and $g_i$ is generated successively by a secret LCG. Then we have our secret polynomial $h(x) &#x3D; f(x) + g(x) \cdot (x^n-1)$ satisfying $h(H_i) &#x3D; f(H_i) &#x3D; key_i$ since $H_i^n &#x3D; 1$.</p>
+<p>According to previous discussion, we have 20 pairs of random points $(x_i, h(x_i))$, which is apparently not enough to recover $h(x)$. Considering $key_i$ is very small compared to $p$, LLL is our option. </p>
+<p>We can’t construct the Lattice directly, but we can resort to $g(x)$. The first step is to establish a linear representation between $g(x)$ and $key_i$, which is quite simple, since <code>ntt</code>, <code>intt</code> and <code>polynomial_evaluation</code> are all linear transformations. </p>
+<ul>
+<li>$\vec{key} &#x3D; NTT_{n \times n} \cdot \vec{f}$</li>
+<li>$\vec{y} &#x3D; X_{k \times (n+k)} \cdot \vec{h} &#x3D; FX_{k \times n} \cdot \vec{f}+ GX_{k \times k} \cdot \vec{g}$</li>
+</ul>
+<p>$\Rightarrow \vec{g} &#x3D; GX^{-1} \cdot (\vec{y} - FX \cdot NTT^{-1} \cdot \vec{key})$</p>
+<p>For $NTT^{-1}$, you can also compute $iNTT$.</p>
+<h3 id="Linearization-for-Unknown-LCG"><a href="#Linearization-for-Unknown-LCG" class="headerlink" title="Linearization for Unknown LCG"></a>Linearization for Unknown LCG</h3><p>We know that $g_{i+1} &#x3D; a \cdot g_i + b$, but $(a, b)$ are randomly chosen on $GF_p$. To get rid of them, we construct equations like $(g_{i+d_0} - g_{i}) \cdot (g_{j+d_1} - g_{j}) &#x3D; (g_{i+d_1} - g_{i}) \cdot (g_{j+d_0} - g_{j})$.</p>
+<p>Here comes an interesting (maybe) question: how many linearly independent equations can we get? Well this did appealled to me and @糖醋小鸡块. Since we can get $k-2$ equations like $y_{i+1} &#x3D; a \cdot y_i$, we can choose any two of them to eliminate $a$, and thus we have $C(k-2, 2)$ equations.</p>
+<p>For @lrnzsir’s strategy, he iterates $(g_{i+2}-g_{i+1}) \cdot (g_{j+1}-g_j) &#x3D; (g_{i+1}-g_i) \cdot (g_{j+2}-g_{j+1})$ for all $i, j \in [k - 2]$ and $i &lt; j$. We can get exactly $C(k-2, 2)$ equations and each equation contains a unique binomial (thus linear independent). So this is the best we can get.</p>
+<blockquote>
+<p>We (@糖醋小鸡块) believe there exists a better way for theoratical analysis.</p>
+</blockquote>
+<p>With linear transformation, we have $C(k-2, 2)$ quadratic equations about $key_i$ now, containing $n + C(n+1, 2)$ monomials. Then we can do LLL on the linearized system to recover the key. One can ignore some equations and utilize <code>flatter</code> for better efficiency.</p>
+<blockquote>
+<p><a href="zk-Openings/exp.py">exp.py</a></p>
+</blockquote>
+<p>There maybe some difference in my code since it’s implemented months ago XD</p>
+]]></content>
+      <tags>
+        <tag>LLL</tag>
+        <tag>KZG</tag>
       </tags>
   </entry>
   <entry>
@@ -653,58 +705,6 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
       <tags>
         <tag>LLL</tag>
         <tag>UOV</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>zk-Openings::Srdnlen CTF 2025 Qual</title>
-    <url>/2025/03/24/srdnlenctf2025/</url>
-    <content><![CDATA[<p>Time: 2025.01.19-20 (online)</p>
-<p>Interesting challenge, but I didn’t have enough time to solve it during the contest XDDD</p>
-<h2 id="zk-Openings-0-solve"><a href="#zk-Openings-0-solve" class="headerlink" title="zk-Openings (0 solve)"></a>zk-Openings (0 solve)</h2><blockquote>
-<ul>
-<li><a href="https://github.com/srdnlen/srdnlenctf-2025_public/tree/main/crypto_zk-openings/src">https://github.com/srdnlen/srdnlenctf-2025_public&#x2F;tree&#x2F;main&#x2F;crypto_zk-openings&#x2F;src</a></li>
-</ul>
-</blockquote>
-<p>I actually learnt a lot from the implementation, thank you @lrnzsir.</p>
-<h3 id="KZG-Commitment"><a href="#KZG-Commitment" class="headerlink" title="KZG Commitment"></a>KZG Commitment</h3><p>KZG commitment is a polynomial commitment scheme proposed by <a href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf">Kate et al in 2010</a>.</p>
-<p>While the original paper used a symmertric type-1 pairing, we prefer to use type-3 pairing these days. Basically we have three groups $(G_1, G_2, G_T)$ , two generators $(g_1 \in G_1, g_2 \in G_2)$, and a bilinear pairing function $e: G_1 \times G_2 \rightarrow G_T$. </p>
-<ol>
-<li>$\mathcal{Setup}(d) \rightarrow srs$: randomly samples a secret value $x$, and computes $srs &#x3D; (g_1^{x}, …, g_1^{x^d}, g_2^{x})$. While $x$ is considered to be “toxic waste”, it must be generated by trusted authority and deleted properly after use.</li>
-<li>$\mathcal{Commit}(srs, f) \rightarrow com$: computes the commitment $com &#x3D; g_1^{\Sigma_{i&#x3D;0}^d f_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{f_i}$ for the polynomial.</li>
-<li>$\mathcal{EvalProve}(srs, f, z) \rightarrow (\pi, f(z))$: computes a polynomial $q(x) &#x3D; \frac{f(x) - f(z)}{x-z}$. Then it computes the proof $\pi &#x3D; g_1^{\Sigma_{i&#x3D;0}^d q_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{q_i}$, proving that one knows the evaluation of $f$ over $z$.</li>
-<li>$\mathcal{EvalVerify}(srs, com, \pi, z, f(z)) \rightarrow 0&#x2F;1$: verifies the proof by checking $e(com \cdot g_1^{-f(z)}, g_2) \overset{?}{&#x3D;} e(\pi, g_2^{s} \cdot g_2^{-z})$.</li>
-</ol>
-<blockquote>
-<p>Note that KZG is a commitment (instead of ZKP) scheme. </p>
-</blockquote>
-<h3 id="The-Challenge"><a href="#The-Challenge" class="headerlink" title="The Challenge"></a>The Challenge</h3><p>For this challenge, we performs the KZG process on some secret polynomial $f$ and ended up with <code>opening.json</code>. Considering the difficulty of DLP under standard parameters, I actually just skip the content related to curve points. So basically we have $k&#x3D;20$ pairs of $(x_i, y_i&#x3D;f(x_i))$.</p>
-<p>And here is how we get the secret polynomial. </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> n <span class="keyword">in</span> AES.key_size <span class="comment"># 32</span></span><br><span class="line">key = os.urandom(n)</span><br><span class="line">evals = <span class="built_in">list</span>(key)</span><br><span class="line">poly = P(intt(evals))</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcg</span>(<span class="params">m: <span class="built_in">int</span>, a: <span class="built_in">int</span>, c: <span class="built_in">int</span>, x: <span class="built_in">int</span></span>) -&gt; <span class="string">&quot;Generator[int, None, None]&quot;</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Linear Congruential Generator &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        x = (a * x + c) % m</span><br><span class="line">        <span class="keyword">yield</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a, c, x = [secrets.randbelow(p) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)]</span><br><span class="line">rng = lcg(p, a, c, x)</span><br><span class="line"></span><br><span class="line">k = <span class="number">20</span></span><br><span class="line">hiding_poly = P([<span class="built_in">next</span>(rng) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k)])</span><br><span class="line">hidden_poly = poly + hiding_poly * Z_H</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(hidden_poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br></pre></td></tr></table></figure>
-
-<p>In short, we have a 32-degree polynomial $f(x)$ and a 20-degree polynomial $g(x)$, where $f(H_i) &#x3D; key_i$ and $g_i$ is generated successively by a secret LCG. Then we have our secret polynomial $h(x) &#x3D; f(x) + g(x) \cdot (x^n-1)$ satisfying $h(H_i) &#x3D; f(H_i) &#x3D; key_i$ since $H_i^n &#x3D; 1$.</p>
-<p>According to previous discussion, we have 20 pairs of random points $(x_i, h(x_i))$, which is apparently not enough to recover $h(x)$. Considering $key_i$ is very small compared to $p$, LLL is our option. </p>
-<p>We can’t construct the Lattice directly, but we can resort to $g(x)$. The first step is to establish a linear representation between $g(x)$ and $key_i$, which is quite simple, since <code>ntt</code>, <code>intt</code> and <code>polynomial_evaluation</code> are all linear transformations. </p>
-<ul>
-<li>$\vec{key} &#x3D; NTT_{n \times n} \cdot \vec{f}$</li>
-<li>$\vec{y} &#x3D; X_{k \times (n+k)} \cdot \vec{h} &#x3D; FX_{k \times n} \cdot \vec{f}+ GX_{k \times k} \cdot \vec{g}$</li>
-</ul>
-<p>$\Rightarrow \vec{g} &#x3D; GX^{-1} \cdot (\vec{y} - FX \cdot NTT^{-1} \cdot \vec{key})$</p>
-<p>For $NTT^{-1}$, you can also compute $iNTT$.</p>
-<h3 id="Linearization-for-Unknown-LCG"><a href="#Linearization-for-Unknown-LCG" class="headerlink" title="Linearization for Unknown LCG"></a>Linearization for Unknown LCG</h3><p>We know that $g_{i+1} &#x3D; a \cdot g_i + b$, but $(a, b)$ are randomly chosen on $GF_p$. To get rid of them, we construct equations like $(g_{i+d_0} - g_{i}) \cdot (g_{j+d_1} - g_{j}) &#x3D; (g_{i+d_1} - g_{i}) \cdot (g_{j+d_0} - g_{j})$.</p>
-<p>Here comes an interesting (maybe) question: how many linearly independent equations can we get? Well this did appealled to me and @糖醋小鸡块. Since we can get $k-2$ equations like $y_{i+1} &#x3D; a \cdot y_i$, we can choose any two of them to eliminate $a$, and thus we have $C(k-2, 2)$ equations.</p>
-<p>For @lrnzsir’s strategy, he iterates $(g_{i+2}-g_{i+1}) \cdot (g_{j+1}-g_j) &#x3D; (g_{i+1}-g_i) \cdot (g_{j+2}-g_{j+1})$ for all $i, j \in [k - 2]$ and $i &lt; j$. We can get exactly $C(k-2, 2)$ equations and each equation contains a unique binomial (thus linear independent). So this is the best we can get.</p>
-<blockquote>
-<p>We (@糖醋小鸡块) believe there exists a better way for theoratical analysis.</p>
-</blockquote>
-<p>With linear transformation, we have $C(k-2, 2)$ quadratic equations about $key_i$ now, containing $n + C(n+1, 2)$ monomials. Then we can do LLL on the linearized system to recover the key. One can ignore some equations and utilize <code>flatter</code> for better efficiency.</p>
-<blockquote>
-<p><a href="zk-Openings/exp.py">exp.py</a></p>
-</blockquote>
-<p>There maybe some difference in my code since it’s implemented months ago XD</p>
-]]></content>
-      <tags>
-        <tag>LLL</tag>
-        <tag>KZG</tag>
       </tags>
   </entry>
   <entry>
