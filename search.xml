@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>0CTF 2025</title>
+    <url>/2025/12/22/0ctf2025/</url>
+    <content><![CDATA[<p>Time: 2025.12.20-21 (online)</p>
+<p>I participated in 0CTF 2025 with r3kapig this weekend, we ended up as 1st place gg.</p>
+<p><img src="/2025/12/22/0ctf2025/images/scoreboard.png" alt="scoreboard"></p>
+<p>This year I learned a lot about Sum of Four Cubes Problem. (Again, how are they called zkp challenges @sh1k4ku XD)</p>
+<h2 id="ZKpuzzle1"><a href="#ZKpuzzle1" class="headerlink" title="ZKpuzzle1"></a>ZKpuzzle1</h2><ul>
+<li><a href="ZKpuzzle1/task.sage">task.sage</a></li>
+</ul>
+<p>In the following 3 ZKpuzzles, we will deal with Sum of Four Cubes Problem with different constraints.</p>
+<p>In this one, we’re given two random 128-bit integers $(r, k)$ and we need to find $(w_1, w_2, w_3, w_4)$ satisfying $\Sigma w_i^3 &#x3D; r \cdot k^3 \pmod{p_1 \cdot p_2}$ and $w_i &lt; 2^{200}$.</p>
+<h3 id="Curve-Selection"><a href="#Curve-Selection" class="headerlink" title="Curve Selection"></a>Curve Selection</h3><p>First things first, we need to submit 2 primes and verify the answer on the constructed elliptic curves. However there’s an implicit constraint in the following code:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">proofSystem</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">myrand</span>(<span class="params">self, E1, E2</span>):</span><br><span class="line">        F = Zmod(E1.order())</span><br><span class="line">        r = F.random_element()</span><br><span class="line">        P = r * E2.gens()[<span class="number">0</span>]</span><br><span class="line">        x = P.x()</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(r * x) &amp; (<span class="number">2</span>**<span class="number">128</span> - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>It turns out if <code>r</code> and <code>x</code> are not in the same field, the code will crash out at <code>int(r * x)</code>. So we need to find a pair of curves $(E_1, E_2)$ satisfying $E_i.p &#x3D; E_{2-i}.order$.</p>
+<p>But we don’t need to face it now. Instead we can set $E_1 &#x3D; E_2$ and find an anomalous curve with $E.p &#x3D; E.order$, then we just solve the problem on $\mathbb{F}_p$.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sage.<span class="built_in">all</span> <span class="keyword">import</span> * </span><br><span class="line">b = <span class="number">137</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">find_prime_for_anomalous_curve</span>(<span class="params">target_b</span>): </span><br><span class="line">    y = randrange(<span class="number">2</span>**<span class="number">127</span>,<span class="number">2</span>**<span class="number">128</span>) | <span class="number">1</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="comment">#  4p = 1^2 + 3y^2  =&gt; p = (3y^2 + 1) / 4</span></span><br><span class="line">        numerator = <span class="number">3</span> * y**<span class="number">2</span> + <span class="number">1</span></span><br><span class="line">        <span class="keyword">if</span> numerator % <span class="number">4</span> == <span class="number">0</span>:</span><br><span class="line">            p = numerator // <span class="number">4</span></span><br><span class="line">            <span class="keyword">if</span> is_prime(p): </span><br><span class="line">                <span class="keyword">try</span>:</span><br><span class="line">                    E = EllipticCurve(GF(p), [<span class="number">0</span>, target_b])</span><br><span class="line">                    <span class="keyword">if</span> E.order() == p:</span><br><span class="line">                        <span class="keyword">return</span> p</span><br><span class="line">                <span class="keyword">except</span> Exception <span class="keyword">as</span> e: </span><br><span class="line">                    <span class="keyword">pass</span></span><br><span class="line">        y += <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Our-Solution"><a href="#Our-Solution" class="headerlink" title="Our Solution"></a>Our Solution</h3><p>Now let’s deal with the Sum of Four Cubes part.</p>
+<p>Actually we can try to solve $\Sigma w_i^3 &#x3D; r \cdot k^3 + t \cdot p$ on $\mathbb{Z}$, which is a widely-studied problem. With certain conditions satisfied, we can find the answer through specific constructions; if we can’t find one, we can just try another $t$.</p>
+<p>Since many constructions lead to $w_i$ with the same (or bigger) scale as the target, we used the following method during the competition:</p>
+<p>$$<br>(u+v)^3 + (u-v)^3 + (-u+w)^3 + (-u-w)^3 &#x3D; 6 \cdot u \cdot (v-w) \cdot (v+w)<br>$$</p>
+<p>With an appropriate target, we can pass the 200-bit constraint and solve the challenge.</p>
+<ul>
+<li><a href="ZKpuzzle1/exp.py">exp.py</a></li>
+</ul>
+<h2 id="ZKpuzzle2"><a href="#ZKpuzzle2" class="headerlink" title="ZKpuzzle2"></a>ZKpuzzle2</h2><ul>
+<li><a href="ZKpuzzle2/task.sage">task.sage</a></li>
+</ul>
+<p>In Stage 2, we’re given two random 128-bit integers $(r, k)$, we need to find $(w_1, w_2, w_3, w_4)$ satisfying $\Sigma w_i^3 &#x3D; r \cdot k^3 \pmod{p_1 \cdot p_2}$ and $w_i &lt; 2^{400}$. But this time, more constraints are added on curve selection.</p>
+<h3 id="2-Cycle-Curves"><a href="#2-Cycle-Curves" class="headerlink" title="2-Cycle Curves"></a>2-Cycle Curves</h3><p>Now we need to face the curve problem: we need to find a pair of curves $(E_1, E_2)$ satisfying $E_i.p &#x3D; E_{2-i}.order$. We also need to control the Hamming weight of the primes which determines our interaction rounds.</p>
+<p>With some research, I found out this is a well-known structure called 2-cycle curves, which is widely used in recursive zkSNARKs. And luckily, NTT is a common requirements and a NTT-friendly prime often exhibits specific characteristics in terms of Hamming weight, which precisely suits to the challenge. I just used the <a href="https://github.com/zcash/pasta">generator</a> implmented by Zcash during the competition.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">p   = <span class="number">0b1100000000110000000000110000000000000000000000000000000000000000000000000000000000000000000000000000000000011000000000110000000000010000100000010000000000000000000000100000100000000000000000001000001000010000000000001100000000001000000000000000000000000001</span></span><br><span class="line">q   = <span class="number">0b1100000000110000000000110000000000000000000000000000000000000000000000000000000000000000000000000000000000011000000000110000000110010000101100010000000000000000000000100000100000000000000000000100000100010000000000001100000000000100000110000000000000000001</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Our-Solution-1"><a href="#Our-Solution-1" class="headerlink" title="Our Solution"></a>Our Solution</h3><p>We can not reuse the method in ZKpuzzle1 because here we need to factor $r \cdot k^3 + t \cdot p_1 \cdot p_2$, which is 512 bit.</p>
+<p>But the good news is the limit has been raised up to 400 bit, larger than the 256 bit prime. Can we solve the equation on $\mathbb{F}_p$ and $\mathbb{F}_q$, and then try to combine the results under the limitation?</p>
+<p>The answer is yes. First let’s consider the following equation:<br>$$<br>(u + a)^3 + (-u)^3 &#x3D; (3 \cdot u^2 + 3 \cdot u \cdot a + 3 \cdot a^2) \cdot a<br>$$</p>
+<p>We have:<br>$$<br>(u + t \cdot p)^3 + (-u)^3 &#x3D; (3 \cdot u^2 + 3 \cdot u \cdot (t \cdot p) + 3 \cdot (t \cdot p)^2) \cdot t \cdot p &#x3D; 0 \pmod{p}<br>$$</p>
+<p>So we can construct the equation:<br>$$<br>(u + t \cdot p)^3 + (-u)^3 + (v + s \cdot q)^3 + (-v)^3 &#x3D; r \cdot k^3 \pmod{p \cdot q} \\<br>\Rightarrow<br>\left\{<br>\begin{matrix}<br>(u + t \cdot p)^3 + (-u)^3 &#x3D; r \cdot k^3 \pmod{q} \\<br>(v + s \cdot q)^3 + (-v)^3 &#x3D; r \cdot k^3 \pmod{p} \\<br>\end{matrix}<br>\right.<br>$$</p>
+<p>Then we just pick up some small $(t, s)$ and try to solve $(u, v)$ on $\mathbb{F}_q$ and $\mathbb{F}_p$ separately. We can combine the results to get the final answer (which is 256 bit or so, actually).</p>
+<ul>
+<li><a href="ZKpuzzle2/exp.py">exp.py</a></li>
+</ul>
+<h2 id="ZKpuzzle3"><a href="#ZKpuzzle3" class="headerlink" title="ZKpuzzle3"></a>ZKpuzzle3</h2><ul>
+<li><a href="ZKpuzzle3/task.sage">task.sage</a></li>
+</ul>
+<p>In Stage 3, we’re given a random 128-bit integers $r$, we need to find $(w_1, w_2, w_3, w_4)$ satisfying $\Sigma w_i^3 &#x3D; r$ and $w_i &lt; 2^{260}$. The curve constraints are the same as Stage 2.</p>
+<h3 id="Our-Solution-2"><a href="#Our-Solution-2" class="headerlink" title="Our Solution"></a>Our Solution</h3><p>The equation in Stage 2 is still useful, but with a different way:<br>$$<br>\begin{aligned}<br>r &amp;&#x3D; (u+x)^3 + (-x)^3 + (v+y)^3 + (-y)^3 \\<br>  &amp;&#x3D; u^3 + v^3 + 3 \cdot u \cdot (u \cdot x + x^2) + 3 \cdot v \cdot (v \cdot y + y^2) \\<br>  &amp;\Rightarrow \\<br>4 \cdot r &amp;&#x3D; u^3 + v^3 + 3 \cdot u \cdot (2 \cdot x + u)^2 + 3 \cdot v \cdot (2 \cdot y + v)^2 \\<br>  &amp;\Rightarrow \\<br>\frac{4 \cdot r - u^3 - v^3}{3} &amp;&#x3D; u \cdot (2 \cdot x + u)^2 + v \cdot (2 \cdot y + v)^2 \\<br>  &amp;&#x3D; u \cdot A^2 + v \cdot B^2<br>\end{aligned}<br>$$</p>
+<p>By doing this, we can transform the original problem into a (Diagonal) Binary Quadratic Form on $\mathbb{Z}$. During the competition we just used <code>BinaryQF(u, 0, v).solve_integer(t)</code> and it worked well, <strong>if there exists a solution</strong>.</p>
+<p>The key point here is that we need wisely pick up $(u, v)$ such that the BQF is solvable. The author @sh1k4ku fixes $u &#x3D; 1$ and try to solve $A^2 + v \cdot B^2 &#x3D; t$ for all $v$. Based on experiments, this indeed gives us a slight advantage.</p>
+<h3 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h3><p>There exists several optimizations to pass the 90s limit.</p>
+<p>We found this <a href="https://www.alpertron.com.ar/FCUBES.HTM">tool</a>. It turns out Sum of Four Cubes Problem has been studied for a long time and a valid answer can be constructed in many conditions. Basically, if $r \neq 4 &#x2F; 5 \pmod{9}$ we can always find a solution with this tool, which saves us much time. </p>
+<p>Another optimization is that since our target is to solve the problem within $\{r, …, r+ROUND\}$, one can precompute all the solutions parallelly once he knows $r$.</p>
+]]></content>
+  </entry>
+  <entry>
     <title>XCTF-ACTF 2025</title>
     <url>/2025/04/27/actf2025/</url>
     <content><![CDATA[<p>Time: 2025.04.26-27 (online)</p>
@@ -136,17 +192,13 @@
 <p>I attended the Black Hat MEA CTF 2025 Final with r3kapig in Riyadh, Saudi Arabia.</p>
 <p>After three days working we got the 2nd place 🥈 in the competition, GG to all my teammates!</p>
 <p><img src="/2025/12/09/blackhatmeactffinal2025/images/scoreboard.png" alt="scoreboard"></p>
-<h1 id="day1"><a href="#day1" class="headerlink" title="day1"></a>day1</h1><h2 id="Que"><a href="#Que" class="headerlink" title="Que?"></a>Que?</h2><blockquote>
-<ul>
+<h1 id="day1"><a href="#day1" class="headerlink" title="day1"></a>day1</h1><h2 id="Que"><a href="#Que" class="headerlink" title="Que?"></a>Que?</h2><ul>
 <li><a href="day1/que/que.py">que.py</a></li>
 </ul>
-</blockquote>
 <p>@chatgpt didn’t get a chance to take a look. XD</p>
-<h2 id="Tampering-Detection-System"><a href="#Tampering-Detection-System" class="headerlink" title="Tampering Detection System"></a>Tampering Detection System</h2><blockquote>
-<ul>
+<h2 id="Tampering-Detection-System"><a href="#Tampering-Detection-System" class="headerlink" title="Tampering Detection System"></a>Tampering Detection System</h2><ul>
 <li><a href="day1/TDS/server.py">server.py</a></li>
 </ul>
-</blockquote>
 <h3 id="AES-GCM"><a href="#AES-GCM" class="headerlink" title="AES-GCM"></a>AES-GCM</h3><p><img src="/2025/12/09/blackhatmeactffinal2025/images/aes_gcm.png" alt="aes-gcm"></p>
 <p>Some code by me for a better understanding. (I prefer $E_0$ while it’s $J_0$ in the figure.)</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> sage.<span class="built_in">all</span> <span class="keyword">import</span> GF</span><br><span class="line"><span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> long_to_bytes, bytes_to_long</span><br><span class="line"><span class="keyword">from</span> Crypto.Cipher <span class="keyword">import</span> AES</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">z0 = GF(<span class="number">2</span>)[<span class="string">&quot;z0&quot;</span>].gen()</span><br><span class="line">F, z = GF(<span class="number">2</span>**<span class="number">128</span>, name=<span class="string">&quot;z&quot;</span>, modulus=z0**<span class="number">128</span> + z0**<span class="number">7</span> + z0**<span class="number">2</span> + z0 + <span class="number">1</span>).objgen()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">xor</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">bytes</span>([ai^bi <span class="keyword">for</span> ai, bi <span class="keyword">in</span> <span class="built_in">zip</span>(a, b)])</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pad128</span>(<span class="params">pt</span>):</span><br><span class="line">    <span class="keyword">return</span> pt + <span class="string">b&#x27;\x00&#x27;</span> * ((<span class="number">16</span> - <span class="built_in">len</span>(pt))%<span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">len64</span>(<span class="params">pt</span>):</span><br><span class="line">    <span class="keyword">return</span> long_to_bytes(<span class="built_in">len</span>(pt)*<span class="number">8</span>, <span class="number">8</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">b2gf</span>(<span class="params">b</span>):</span><br><span class="line">    <span class="keyword">return</span> F(<span class="built_in">list</span>(<span class="built_in">bin</span>(bytes_to_long(b))[<span class="number">2</span>:].zfill(<span class="number">128</span>)))</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gf2b</span>(<span class="params">g</span>):</span><br><span class="line">    <span class="keyword">return</span> long_to_bytes(<span class="built_in">int</span>(<span class="string">&#x27;&#x27;</span>.join(<span class="built_in">map</span>(<span class="built_in">str</span>, g.<span class="built_in">list</span>())), <span class="number">2</span>), <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">TAG</span>(<span class="params">key: <span class="built_in">bytes</span>, aad: <span class="built_in">bytes</span>, nonce: <span class="built_in">bytes</span>, ct: <span class="built_in">bytes</span></span>):</span><br><span class="line">    aes = AES.new(key=key, mode=AES.MODE_ECB)</span><br><span class="line">    E0 = aes.encrypt(nonce + long_to_bytes(<span class="number">1</span>, <span class="number">4</span>))</span><br><span class="line">    H = aes.encrypt(long_to_bytes(<span class="number">0</span>, <span class="number">16</span>))</span><br><span class="line">    C = pad128(aad) + pad128(ct) + len64(aad) + len64(ct)</span><br><span class="line">    TAG = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(C), <span class="number">16</span>):</span><br><span class="line">        TAG += b2gf(C[i:i+<span class="number">16</span>])</span><br><span class="line">        TAG *= b2gf(H)</span><br><span class="line">    TAG += b2gf(E0)</span><br><span class="line">    <span class="keyword">return</span> gf2b(TAG) <span class="comment"># GHASH(H, C) + E0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">CT</span>(<span class="params">key: <span class="built_in">bytes</span>, nonce: <span class="built_in">bytes</span>, pt: <span class="built_in">bytes</span></span>):</span><br><span class="line">    aes = AES.new(key=key, mode=AES.MODE_ECB)</span><br><span class="line">    H = aes.encrypt(long_to_bytes(<span class="number">0</span>, <span class="number">16</span>))</span><br><span class="line">    ctr = nonce + long_to_bytes(<span class="number">1</span>, <span class="number">4</span>)</span><br><span class="line">    ct = <span class="string">b&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(pt), <span class="number">16</span>):</span><br><span class="line">        ctr = long_to_bytes(bytes_to_long(ctr) + <span class="number">1</span>, <span class="number">16</span>)</span><br><span class="line">        pti = pt[i: i+<span class="number">16</span>]</span><br><span class="line">        cti = xor(pti, aes.encrypt(ctr)[:<span class="built_in">len</span>(pti)])</span><br><span class="line">        ct += cti</span><br><span class="line">    <span class="keyword">return</span> ct    </span><br></pre></td></tr></table></figure>
@@ -163,16 +215,12 @@
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">z0 = GF(<span class="number">2</span>)[<span class="string">&quot;z0&quot;</span>].gen()</span><br><span class="line">F, z = GF(<span class="number">2</span>**<span class="number">128</span>, name=<span class="string">&quot;z&quot;</span>, modulus=z0**<span class="number">128</span> + z0**<span class="number">7</span> + z0**<span class="number">2</span> + z0 + <span class="number">1</span>).objgen()</span><br><span class="line">x = F[<span class="string">&quot;x&quot;</span>].gen()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ch <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">256</span>):</span><br><span class="line">    aad = <span class="string">b&quot;\x00&quot;</span>*<span class="number">16</span></span><br><span class="line">    ct = prefix + <span class="built_in">bytes</span>([ch])</span><br><span class="line">    C = pad128(aad) + pad128(ct) + len64(aad) + len64(ct)</span><br><span class="line">    ftag = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">len</span>(C), <span class="number">16</span>):</span><br><span class="line">        <span class="keyword">if</span> i == <span class="number">0</span>:</span><br><span class="line">            Ci = x</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            Ci = b2gf(C[i: i+<span class="number">16</span>])</span><br><span class="line">        ftag += Ci</span><br><span class="line">        ftag *= b2gf(H)</span><br><span class="line">    ftag += b2gf(E0) + b2gf(tag2)</span><br><span class="line">    ans = ftag.univariate_polynomial().roots()</span><br><span class="line">    aad = gf2b(ans[<span class="number">0</span>][<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
 
 <p>With a long enough <code>ct</code>, we can decrypt our flag now.</p>
-<blockquote>
 <ul>
 <li><a href="day1/TDS/exp.py">exp.py</a></li>
 </ul>
-</blockquote>
-<h1 id="day2"><a href="#day2" class="headerlink" title="day2"></a>day2</h1><h2 id="doloRSitAmet"><a href="#doloRSitAmet" class="headerlink" title="doloRSitAmet"></a>doloRSitAmet</h2><blockquote>
-<ul>
+<h1 id="day2"><a href="#day2" class="headerlink" title="day2"></a>day2</h1><h2 id="doloRSitAmet"><a href="#doloRSitAmet" class="headerlink" title="doloRSitAmet"></a>doloRSitAmet</h2><ul>
 <li><a href="day2/doloRSitAmet/server.py">server.py</a></li>
 </ul>
-</blockquote>
 <h3 id="All-about-Sample-Strategy"><a href="#All-about-Sample-Strategy" class="headerlink" title="All about Sample Strategy"></a>All about Sample Strategy</h3><p>Clearly, 4 equations are not enough to solve the whole system, but we can ‘glue’ some variables by setting certain seeds. For instance we can fix <code>1,2</code> showing up together, which leads to a new variable.</p>
 <p>At first I tried to split them into 3 parts like <code>[(0), (1,2,3), (4)]</code>.</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Seed 15901 gives [0, 1, 2, 3, 4]</span><br><span class="line">Seed 22733 gives [4, 1, 2, 3, 0]</span><br><span class="line">Seed 15054 gives [1, 2, 3, 0, 4]</span><br><span class="line">Seed 17502 gives [1, 2, 3, 4, 0]</span><br></pre></td></tr></table></figure>
@@ -182,16 +230,12 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Seed 15901 gives [0, 1, 2, 3, 4]</span><br><span class="line">Seed 17502 gives [1, 2, 3, 4, 0]</span><br><span class="line">Seed 4145  gives [0, 2, 3, 4, 5]</span><br><span class="line">Seed 15589 gives [2, 3, 4, 5, 0]</span><br></pre></td></tr></table></figure>
 
 <p>With 2 polynomials, we can solve the first variable by <code>gcd</code>. This gives us another linear equation with 2 variables (the first sentence and the flag sentence) but much smaller (there’s only 32 bytes unknown in the flag sentence), so we just LLL and get the flag.</p>
-<blockquote>
 <ul>
 <li><a href="day2/doloRSitAmet/exp.py">exp.py</a></li>
 </ul>
-</blockquote>
-<h2 id="limeade"><a href="#limeade" class="headerlink" title="limeade"></a>limeade</h2><blockquote>
-<ul>
+<h2 id="limeade"><a href="#limeade" class="headerlink" title="limeade"></a>limeade</h2><ul>
 <li><a href="day2/limeade/limeade.py">limeade.py</a></li>
 </ul>
-</blockquote>
 <p>A juicy challenge, for real.</p>
 <h3 id="Structure-Analysis"><a href="#Structure-Analysis" class="headerlink" title="Structure Analysis"></a>Structure Analysis</h3><p>To put it briefly, <code>Lime</code> includes permutation (<code>Roll</code>) and substitution (<code>Squeeze</code>) funcion. And <code>Jucier</code> essentially constructs a 2-round SPN cipher with each round using the same key:</p>
 <ol>
@@ -221,31 +265,24 @@
 <ul>
 <li><a href="day2/limeade/exp.py">exp.py</a></li>
 </ul>
-<h2 id="ella"><a href="#ella" class="headerlink" title="(*)ella"></a>(*)ella</h2><blockquote>
-<ul>
+<h2 id="ella"><a href="#ella" class="headerlink" title="(*)ella"></a>(*)ella</h2><ul>
 <li><a href="day2/ella/ella.py">ella.py</a></li>
 </ul>
-</blockquote>
 <blockquote>
 <p>No need for any paper, it’s just parity statistics.</p>
 </blockquote>
 <p>I may spend more time on this challenge later.</p>
-<h1 id="day3"><a href="#day3" class="headerlink" title="day3"></a>day3</h1><h2 id="NoisyChannel"><a href="#NoisyChannel" class="headerlink" title="NoisyChannel"></a>NoisyChannel</h2><blockquote>
-<ul>
+<h1 id="day3"><a href="#day3" class="headerlink" title="day3"></a>day3</h1><h2 id="NoisyChannel"><a href="#NoisyChannel" class="headerlink" title="NoisyChannel"></a>NoisyChannel</h2><ul>
 <li><a href="day3/NoisyChannel/server.py">server.py</a></li>
 </ul>
-</blockquote>
 <h3 id="Our-Solution"><a href="#Our-Solution" class="headerlink" title="Our Solution"></a>Our Solution</h3><p>It turns out that <code>randbytes</code> is implemented with <code>getrandbits</code>, with MT19937 as the prng core.</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># random.py</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">randbytes</span>(<span class="params">self, n</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Generate n random bytes.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="variable language_">self</span>.getrandbits(n * <span class="number">8</span>).to_bytes(n, <span class="string">&#x27;little&#x27;</span>)</span><br></pre></td></tr></table></figure>
 
 <p>Our target is to find a kernel vector that can be used for any random seeds. If this is even possible, it implies we are dealing with a non-full-rank linear system. Therefore, we can randomly generate sets of data, concatenate them, and then extract a non-trivial vector from its left kernel space as the answer.</p>
-<blockquote>
 <ul>
 <li><a href="day3/NoisyChannel/exp.py">exp.py</a></li>
 </ul>
-</blockquote>
-<h2 id="LCC-LLC"><a href="#LCC-LLC" class="headerlink" title="(*)LCC LLC"></a>(*)LCC LLC</h2><blockquote>
-<ul>
+<h2 id="LCC-LLC"><a href="#LCC-LLC" class="headerlink" title="(*)LCC LLC"></a>(*)LCC LLC</h2><ul>
 <li><a href="day3/lccllc/app.py">app.py</a></li>
 <li><a href="day3/lccllc/crypto.py">crypto.py</a></li>
 <li>static</li>
@@ -263,7 +300,6 @@
 </ul>
 </li>
 </ul>
-</blockquote>
 <p>Here comes a McEliece challenge.</p>
 <h3 id="Decode-Failure-Oracle"><a href="#Decode-Failure-Oracle" class="headerlink" title="Decode Failure Oracle"></a>Decode Failure Oracle</h3><p>Core functions below. </p>
 <p>The server uses McEliece to generate access tokens, and our target is to forge a valid token with admin privilege. </p>
