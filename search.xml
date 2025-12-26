@@ -6,12 +6,13 @@
     <content><![CDATA[<p>Time: 2025.12.20-21 (online)</p>
 <p>I participated in 0CTF 2025 with r3kapig this weekend, we ended up as 1st place gg.</p>
 <p><img src="/2025/12/22/0ctf2025/images/scoreboard.png" alt="scoreboard"></p>
-<p>This year I learned a lot about Sum of Four Cubes Problem. (Again, how are they called zkp challenges @sh1k4ku XD)</p>
+<p>Learned a lot about Sum of Four Cubes Problem this year. (Again, why you call them zkp challenges @sh1k4ku XD)</p>
+<p>@deebato so strong</p>
+<h1 id="ZKpuzzle"><a href="#ZKpuzzle" class="headerlink" title="ZKpuzzle"></a>ZKpuzzle</h1><p>In the following 3 ZKpuzzles, we will deal with Sum of Four Cubes Problem with different constraints.</p>
 <h2 id="ZKpuzzle1"><a href="#ZKpuzzle1" class="headerlink" title="ZKpuzzle1"></a>ZKpuzzle1</h2><ul>
 <li><a href="ZKpuzzle1/task.sage">task.sage</a></li>
 </ul>
-<p>In the following 3 ZKpuzzles, we will deal with Sum of Four Cubes Problem with different constraints.</p>
-<p>In this one, we’re given two random 128-bit integers $(r, k)$ and we need to find $(w_1, w_2, w_3, w_4)$ satisfying $\Sigma w_i^3 &#x3D; r \cdot k^3 \pmod{p_1 \cdot p_2}$ and $w_i &lt; 2^{200}$.</p>
+<p>In this Stage 1, we’re given two random 128-bit integers $(r, k)$ and we need to find $(w_1, w_2, w_3, w_4)$ satisfying $\Sigma w_i^3 &#x3D; r \cdot k^3 \pmod{p_1 \cdot p_2}$ and $w_i &lt; 2^{200}$.</p>
 <h3 id="Curve-Selection"><a href="#Curve-Selection" class="headerlink" title="Curve Selection"></a>Curve Selection</h3><p>First things first, we need to submit 2 primes and verify the answer on the constructed elliptic curves. However there’s an implicit constraint in the following code:</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">proofSystem</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">myrand</span>(<span class="params">self, E1, E2</span>):</span><br><span class="line">        F = Zmod(E1.order())</span><br><span class="line">        r = F.random_element()</span><br><span class="line">        P = r * E2.gens()[<span class="number">0</span>]</span><br><span class="line">        x = P.x()</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">int</span>(r * x) &amp; (<span class="number">2</span>**<span class="number">128</span> - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
@@ -538,58 +539,6 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
       </tags>
   </entry>
   <entry>
-    <title>fairy-ring::Dice CTF 2025 Qual</title>
-    <url>/2025/04/01/dicectf2025/</url>
-    <content><![CDATA[<p>Time: 2025.03.29-31 (online)</p>
-<h2 id="fairy-ring-7-solves"><a href="#fairy-ring-7-solves" class="headerlink" title="fairy-ring (7 solves)"></a>fairy-ring (7 solves)</h2><p><a href="https://priv.pub/posts/dicectf-quals-2025/#fairy-ring">Original Writeup</a></p>
-<p><a href="https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring">https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring</a></p>
-<blockquote>
-<ul>
-<li><a href="fairy-ring/server.py">server.py</a></li>
-<li><a href="https://github.com/mjosaarinen/uov-py/tree/main">https://github.com/mjosaarinen/uov-py/tree/main</a></li>
-<li><ul>
-<li><a href="fairy-ring/uov.py">uov.py</a></li>
-</ul>
-</li>
-<li><ul>
-<li><a href="fairy-ring/uov_trapdoor.py">uov_trapdoor.py</a></li>
-</ul>
-</li>
-<li>keys</li>
-</ul>
-</blockquote>
-<p>Also check this <a href="https://priv.pub/posts/rainbow-attack/">defund’s gift</a> and this <a href="https://eprint.iacr.org/2020/1343.pdf">Improved cryptanalysis of UOV and Rainbow</a>!</p>
-<p>A good chance to learn more about MQ and UOV.</p>
-<h3 id="Multivariate-Quadratic"><a href="#Multivariate-Quadratic" class="headerlink" title="Multivariate Quadratic"></a>Multivariate Quadratic</h3><p>A Multivariate Quadratic (MQ) is a polynomial in $n$ variables over $\mathbb{F_q}$: $f(x_1, …, x_n) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j + \sum_i^n b_{i} x_i + c$. We can represent it with matrix: $f(\vec{x}) &#x3D; \vec{x}^\top  A  \vec{x} + \vec{b}^\top  \vec{x} + c$.</p>
-<p>A Multivariate Quadratic Map $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ is a collection of such polynomials $f_1, …, f_m$ where:<br>$$\mathcal{F}(\vec{x}) &#x3D; (f_1(\vec{x}), …, f_m(\vec{x}))$$</p>
-<p>Multivariate Quadratic Problem (MQP): Given arbitrary $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ and $\vec{t} \in \mathbb{F_q^m}$, it’s NP-hard to find $\mathcal{F}(\vec{s}) &#x3D; \vec{t}$. </p>
-<h3 id="Polar-Form"><a href="#Polar-Form" class="headerlink" title="Polar Form"></a>Polar Form</h3><p>It’s clear that:<br>$$<br>\begin{aligned}<br>f(\vec{x} + \vec{y}) &amp;&#x3D; (\vec{x} + \vec{y})^\top  A  (\vec{x} + \vec{y}) + \vec{b}^\top  (\vec{x} + \vec{y}) + c \\<br>&amp;&#x3D; f(\vec{x}) + f(\vec{y}) - f(\vec{0}) + \vec{x}^\top  (A + A^\top)  \vec{y} \\<br>\end{aligned}<br>$$</p>
-<p>And we have the polar form: $f’(\vec{x}, \vec{y}) &#x3D; \vec{x}^\top  (A + A^\top)  \vec{y} &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y}) + f(\vec{0})$. This also works for a Multivariate Quadratic Map: $\mathcal{F}’(\vec{x}, \vec{y}) &#x3D; \mathcal{F}(\vec{x} + \vec{y}) - \mathcal{F}(\vec{x}) - \mathcal{F}(\vec{y}) + \mathcal{F}(\vec{0})$.</p>
-<h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><p>We mainly focus on the quadratic part of a MQ, which serves as the core of the hardness. So we usually have $f(\vec{x}) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j &#x3D; \vec{x}^\top  A  \vec{x}$. One can always find a symmertric $A$ since $\vec{x}^\top  A  \vec{x} &#x3D; \vec{x}^\top  A^\top  \vec{x} &#x3D; \vec{x}^\top  (\frac{A + A^\top}{2})  \vec{x}$. We can further simplify $A$ into a upper triangular matrix, which is more intuitive and leads to less storage overhead.</p>
-<p>And the polar form: $f’(\vec{x}, \vec{y}) &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y})$.</p>
-<h3 id="UOV-Signature"><a href="#UOV-Signature" class="headerlink" title="UOV Signature"></a>UOV Signature</h3><p>The Unbalanced Oil and Vinegar (UOV) scheme is a signature scheme based on MQ.</p>
-<p>First we construct an easy-to-solve MQ $f(\vec{x}) &#x3D; \sum_i^n \sum_{j &gt; m}^n a_{i,j} x_i x_j$. Here we call oil variables $\vec{x_o} &#x3D; (x_1, …, x_m, 0, …, 0)$ and vinegar variables $\vec{x_v} &#x3D; (0, …, 0, x_{m+1}, …, x_{m+v})$ (where $n &#x3D; m+v$), and it’s clear that $\mathcal{F}$ is linear to $\vec{x_o}$. By randomly choosing $\vec{x_v}$, one can solve the linear system to get the answer.</p>
-<p>Matrix form:<br>$$<br>A &#x3D; \begin{bmatrix}<br>O_{m \times m} &amp; B_{m \times v} \\<br>O_{v \times m} &amp; C_{v \times v}<br>\end{bmatrix}<br>\rightarrow<br>(\vec{x_o} + \vec{x_v})^\top  A  (\vec{x_o} + \vec{x_v}) &#x3D; \vec{x_o}’^\top  B  \vec{x_v}’ + \vec{x_v}’^\top  C  \vec{x_v}’<br>$$</p>
-<p>Polar form:<br>$$<br>\mathcal{F}(\vec{x_o}) &#x3D; \vec{0} \rightarrow \mathcal{F}(\vec{x_o} + \vec{x_v}) &#x3D; \mathcal{F}’(\vec{x_o}, \vec{x_v}) + \mathcal{F}(\vec{x_v})<br>$$</p>
-<p>In UOV, we use $\mathcal{F}$ as the private key and the public key is $\mathcal{P} &#x3D; \mathcal{F} \circ \mathcal{T}$, where $\mathcal{T}$ is an invertable linear transformation. For a message $m$, the signature $\vec{s}$ satisfies $\mathcal{P}(\vec{s}) &#x3D; \mathcal{Hash}(m)$. The signer just solves $\mathcal{F}(\vec{x}) &#x3D; \mathcal{Hash}(m)$ and computes $\vec{s} &#x3D; \mathcal{T}^{-1}(\vec{x})$.</p>
-<p>The main idea is to find a linear space $\mathcal{O}$ with rank $r \geq m$, and for all $\vec{o} \in \mathcal{O}$ we have $\mathcal{P}(\vec{o}) &#x3D; \vec{0}$. It’s also worth mentioning that for any valid signature $\vec{s}$, $\vec{s} + \mathcal{O}$ is still valid.</p>
-<h3 id="Ring-Signature"><a href="#Ring-Signature" class="headerlink" title="Ring Signature"></a>Ring Signature</h3><p>In this challenge, we have a ring signature scheme based on UOV. Any one of the $n$ users can generate a signature on behalf of the group, and no one can distinguish the signer.</p>
-<ul>
-<li>$\mathcal{Setup}:$ Each user generates a UOV key pair $(\mathcal{P}, \mathcal{F})$.</li>
-<li>$\mathcal{Sign}:$ For message $m$, user $a$ randomly chooses $(\vec{x_1}, …, \vec{x_{a-1}}, \vec{x_{a+1}},…, \vec{x_n})$ and compute $\vec{t} &#x3D; \mathcal{Hash}(m) - \sum_{i \neq a}^n \mathcal{P_i}(\vec{x_i})$. Then user $a$ solve $\mathcal{P_a}(\vec{x_a}) &#x3D; \vec{t}$ with the private key $\mathcal{F_a}$. The signature is $(\vec{x_1}, …, \vec{x_n})$.</li>
-<li>$\mathcal{Verify}:$ Check whether $\mathcal{Hash}(m) &#x3D; \sum_{i}^n \mathcal{P_i}(\vec{x_i})$ satisfies.</li>
-</ul>
-<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>The solution is easy but elegant.</p>
-<p>We can pick the same public key more than once, and actually it’s possible for us to forge a valid signature for any message (yeah it’s completely broken). Consider a public key $\mathcal{P}$, we have</p>
-<p>$$\vec{t} &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x}) &#x3D; \mathcal{P}’(\vec{x}, \vec{y}) + \mathcal{P}(\vec{y})$$</p>
-<p>Here $\vec{t}$ is linear to $\vec{x}$, that’s all we need to solve this challenge. For a given message $m$, we can pick the same public key $\mathcal{P}$ twice, then randomly choose a $\vec{y}$ and find the solution $\mathcal{Hash}(m) &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x})$ (it’s the same for ‘$+$’ and ‘$\oplus$’ on $\mathbb{F_{2^8}}$). And $(\vec{x} + \vec{y}, \vec{x})$ is a valid signature.</p>
-<p><a href="fairy-ring/exp.py">exp.py</a></p>
-]]></content>
-      <tags>
-        <tag>UOV</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hitcon CTF 2025</title>
     <url>/2025/08/25/hitconctf2025/</url>
     <content><![CDATA[<p>I played Hitcon CTF last weekend with r3kapig, enjoyed.</p>
@@ -655,6 +604,202 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
 ]]></content>
       <tags>
         <tag>LLL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Yet another story about Sagemath environment</title>
+    <url>/2025/07/23/sageenv/</url>
+    <content><![CDATA[<p>For some reasons, I reconfigured my Sagemath environment recently. This post shares my tips based on my experiences these days.</p>
+<p>For beginners, I’m sure this is helpful. But most of you crypto players are no strangers to Sagemath - some of you are experts ig. In that case, I hope you’ll still find something interesting here :D</p>
+<p>Our main targets:</p>
+<ol>
+<li>(Basic) Use Sagemath in VS Code, with Syntax Parsing and other helps.</li>
+<li>Integrating external python packages into Sagemath.</li>
+<li>Virtual Environment for Sagemath.</li>
+</ol>
+<h2 id="Run-sage-×-Import-sage-√"><a href="#Run-sage-×-Import-sage-√" class="headerlink" title="Run sage ×; Import sage √"></a>Run <code>sage</code> ×; Import <code>sage</code> √</h2><p>Sagemath supports many special syntaxes for simplicity and convenience. Take the following code as an example, you can use it directly in a console or write it to a <code>main.sage</code> and run it with <code>sage main.sage</code>. Typically, it is least efficient to run code in a console.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># main.sage</span></span><br><span class="line">R.&lt;x&gt; = ZZ[]</span><br><span class="line">f = x^<span class="number">2</span> - <span class="number">16</span></span><br><span class="line"><span class="built_in">print</span>(f.roots())</span><br><span class="line"><span class="comment"># [(4, 1), (-4, 1)]</span></span><br></pre></td></tr></table></figure>
+
+<p>But, as we all know, Sagemath is essentially python-style code, and we can use it exactly as python. In this case, you can import <code>sage</code> like a package and run the code with Sagemath’s built-in python interpreter as <code>sage -python main.py</code>.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># main.py</span></span><br><span class="line"><span class="keyword">from</span> sage.<span class="built_in">all</span> <span class="keyword">import</span> *</span><br><span class="line">R, x = PolynomialRing(ZZ, <span class="string">&#x27;x&#x27;</span>).objgen()</span><br><span class="line">f = x**<span class="number">2</span> - <span class="number">16</span></span><br><span class="line"><span class="built_in">print</span>(f.roots())</span><br><span class="line"><span class="comment"># [(4, 1), (-4, 1)]</span></span><br></pre></td></tr></table></figure>
+
+<p>What are the benefits of this? </p>
+<p>As mentioned before, Sagemath supports its own syntax system. When implementing python code, the meaning of some code is implicitly changed. For example, sagemath will use its own type by default for numbers. Another common example is the <code>^</code> symbol in sagemath, which is equivalent to <code>**</code> in python. However, <code>^</code> is used in python for <code>xor</code> computation, for which you will have to use <code>^^</code> in sagemath instead.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = <span class="number">233</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># python</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(a), a.bit_length())</span><br><span class="line"><span class="built_in">print</span>(a^<span class="number">2</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">&lt;class &#x27;int&#x27;&gt; 8</span></span><br><span class="line"><span class="string">235</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sage</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(a), a.nbits())</span><br><span class="line"><span class="built_in">print</span>(a^<span class="number">2</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">&lt;class &#x27;sage.rings.integer.Integer&#x27;&gt; 8</span></span><br><span class="line"><span class="string">54289</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>In this case, running your code (especially external python packages or projects) directly with Sagemath can easily have an obscure effect on type identification, function calls, etc. This is intolerable for me, so I highly recommend the python-style solution. </p>
+<p>I don’t know the exact working mechanism in Sagemath, but this works perfectly: for any data type, function, syntax in Sagemath, you can always find the corresponding python code. In fact, you can always find a <code>main.sage.py</code> after you run <code>sage main.sage</code>, which contains the python-version of your Sagemath codes.</p>
+<p>The advantage is that if you implenemt your code entirely in python style, you can introduce python-related tools such as syntax highlighting, which we’ll cover later.</p>
+<p>For efficiency, I don’t think there is a significant difference between the two ways. But if you wanna run sage-independent python code, using a python interpreter (not the one in Sagemath) directly is a more efficient choice.</p>
+<h2 id="External-Python-Packages"><a href="#External-Python-Packages" class="headerlink" title="External Python Packages"></a>External Python Packages</h2><p>A simple way to use external python packages is to run <code>pip install</code> in your Sagemath console. Then you can import them in your sage-style&#x2F;python-style code.</p>
+<h2 id="Basic-is-Enough"><a href="#Basic-is-Enough" class="headerlink" title="Basic is Enough"></a>Basic is Enough</h2><p>Here comes my simple, basic configuration used for years.</p>
+<p>I just implement my codes in VS Code and run them in the terminal with <code>sage -python main.py</code>. Of course, you can use Code Runner for some convenience (but I didn’t). The only configuration I do is Pylance, in order to get code highlighting and other tools in programming. Here, the core of the problem lies in the <strong>interpreter setting</strong>.</p>
+<p>To achieve this, we can run the following code in Sagemath console. </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># tested on my MacOS</span></span><br><span class="line">┌────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│ SageMath version <span class="number">10.6</span>, Release Date: <span class="number">2025</span>-03-<span class="number">31</span>                    │</span><br><span class="line">│ Using Python <span class="number">3.12</span><span class="number">.5</span>. <span class="type">Type</span> <span class="string">&quot;help()&quot;</span> <span class="keyword">for</span> <span class="built_in">help</span>.                       │</span><br><span class="line">└────────────────────────────────────────────────────────────────────┘</span><br><span class="line">sage: <span class="keyword">import</span> sys</span><br><span class="line">sage: sys.path</span><br><span class="line">[<span class="string">&#x27;/Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python312.zip&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12/lib-dynload&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12/site-packages&#x27;</span>]</span><br><span class="line">sage: cat /Applications/SageMath-<span class="number">10</span>-<span class="number">6.</span>app/Contents/Frameworks/Sage.framework/Versions/<span class="number">10.6</span>/local/var/lib/sage/venv-python3<span class="number">.12</span><span class="number">.5</span>/<span class="built_in">bin</span>/sage-python</span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line">sage -python <span class="string">&quot;$@&quot;</span></span><br><span class="line">sage: </span><br></pre></td></tr></table></figure>
+
+<p>You can find a <code>.../bin</code> path. There’ll always be a <code>sage-python</code> bash file in that folder, which simply runs <code>sage -python &quot;$@&quot;</code>. If you set this file as the interpreter in your VS Code, you can parse the syntax of sage-related functions.</p>
+<p><img src="/2025/07/23/sageenv/images/1.png" alt="1.png"></p>
+<p>This used to be able to parse external packages, but it stopped working in my VS Code for some reason. My solution is to manually import the <code>.../site-packages</code> path in the outputs above.</p>
+<p>In short, you can create the following <code>.vscode/settings.json</code> file:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;python.defaultInterpreterPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin/sage-python&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;files.exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="comment">// this will hide the following setting files</span></span><br><span class="line">    <span class="attr">&quot;**/.vscode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;**/.env&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>And a <code>.env</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">PYTHONPATH=<span class="string">&quot;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12/site-packages&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>With the corresponding outputs in your own Sagemath, of course.</p>
+</blockquote>
+<p>For those who favor using Jupyter Notebook, this also works. You just need to use Sagemath as a jupyter kernel, and Pylance will effectively parse your codes.</p>
+<h2 id="A-Fresh-Take"><a href="#A-Fresh-Take" class="headerlink" title="A Fresh Take"></a>A Fresh Take</h2><p>Through further explorations, I discovered a more interesting method. You see, we can use <code>.../bin/sage-python</code> mentioned above as a python interpreter, can we set up a virtual environment using <code>venv</code>? The answer is yes, but it’s just a pure python environment (without <code>sage</code> package).</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">rec:/ $ /Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin/sage-python -m venv new_sage_venv</span><br><span class="line">rec:/ $ <span class="built_in">source</span> new_sage_venv/bin/activate</span><br><span class="line">(new_sage_venv) rec:/ $ python</span><br><span class="line">Python 3.12.5 (main, Feb 25 2025, 12:37:41) [Clang 16.0.0 (clang-1600.0.26.6)] on darwin</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; from sage.all import *</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line 1, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">ModuleNotFoundError: No module named <span class="string">&#x27;sage&#x27;</span></span><br><span class="line">&gt;&gt;&gt; </span><br></pre></td></tr></table></figure>
+
+<p>But it turns out that we can import <code>sage</code> by inheriting the system packages with <code>--system-site-packages</code>. In this way, all virtual environments created share the same Sagemath base environment, and we can make special configurations in each of them. </p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">rec:/ $ /Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin/sage-python -m venv new_sage_venv --system-site-packages</span><br><span class="line">rec:/ $ <span class="built_in">source</span> new_sage_venv/bin/activate</span><br><span class="line">(new_sage_venv) rec:/ $ python</span><br><span class="line">Python 3.12.5 (main, Feb 25 2025, 12:37:41) [Clang 16.0.0 (clang-1600.0.26.6)] on darwin</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; from sage.all import *</span><br><span class="line">&gt;&gt;&gt; GF</span><br><span class="line">&lt;sage.rings.finite_rings.finite_field_constructor.FiniteFieldFactory object at 0x1099ae490&gt;</span><br><span class="line">&gt;&gt;&gt; </span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>It’s the same if you use <code>sage -python</code> to create one.</p>
+</blockquote>
+<p>The advantages are obvious: pure, independent virtual python environment with <code>sage</code> packages, which makes configuration and package management much easier. We don’t need any additional configurations described earlier. We just need to set the current virtual environment in VS Code and run our code as <code>python main.py</code>, install new package as <code>pip install package</code>…</p>
+<p>Also, we can use this python interpreter for Jupyter Notebook.</p>
+<p>With the new virtual environment, you can create the following <code>.vscode/settings.json</code> file in your VS Code:</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;python.defaultInterpreterPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;new_sage_venv/bin/python&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;python.terminal.activateEnvironment&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="comment">// activate the venv in vscode every time</span></span><br><span class="line">    <span class="attr">&quot;files.exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="comment">// this will hide the following setting files</span></span><br><span class="line">        <span class="attr">&quot;**/.vscode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;**/new_sage_venv&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Uhh, the end. I thought there’ll be more to share but it turns out to be simple. Hope you enjoy this!</p>
+]]></content>
+      <tags>
+        <tag>sagemath</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>fairy-ring::Dice CTF 2025 Qual</title>
+    <url>/2025/04/01/dicectf2025/</url>
+    <content><![CDATA[<p>Time: 2025.03.29-31 (online)</p>
+<h2 id="fairy-ring-7-solves"><a href="#fairy-ring-7-solves" class="headerlink" title="fairy-ring (7 solves)"></a>fairy-ring (7 solves)</h2><p><a href="https://priv.pub/posts/dicectf-quals-2025/#fairy-ring">Original Writeup</a></p>
+<p><a href="https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring">https://github.com/defund/ctf/tree/master/dicectf-quals-2025/fairy-ring</a></p>
+<blockquote>
+<ul>
+<li><a href="fairy-ring/server.py">server.py</a></li>
+<li><a href="https://github.com/mjosaarinen/uov-py/tree/main">https://github.com/mjosaarinen/uov-py/tree/main</a></li>
+<li><ul>
+<li><a href="fairy-ring/uov.py">uov.py</a></li>
+</ul>
+</li>
+<li><ul>
+<li><a href="fairy-ring/uov_trapdoor.py">uov_trapdoor.py</a></li>
+</ul>
+</li>
+<li>keys</li>
+</ul>
+</blockquote>
+<p>Also check this <a href="https://priv.pub/posts/rainbow-attack/">defund’s gift</a> and this <a href="https://eprint.iacr.org/2020/1343.pdf">Improved cryptanalysis of UOV and Rainbow</a>!</p>
+<p>A good chance to learn more about MQ and UOV.</p>
+<h3 id="Multivariate-Quadratic"><a href="#Multivariate-Quadratic" class="headerlink" title="Multivariate Quadratic"></a>Multivariate Quadratic</h3><p>A Multivariate Quadratic (MQ) is a polynomial in $n$ variables over $\mathbb{F_q}$: $f(x_1, …, x_n) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j + \sum_i^n b_{i} x_i + c$. We can represent it with matrix: $f(\vec{x}) &#x3D; \vec{x}^\top  A  \vec{x} + \vec{b}^\top  \vec{x} + c$.</p>
+<p>A Multivariate Quadratic Map $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ is a collection of such polynomials $f_1, …, f_m$ where:<br>$$\mathcal{F}(\vec{x}) &#x3D; (f_1(\vec{x}), …, f_m(\vec{x}))$$</p>
+<p>Multivariate Quadratic Problem (MQP): Given arbitrary $\mathcal{F}: \mathbb{F_q^n} \rightarrow \mathbb{F_q^m}$ and $\vec{t} \in \mathbb{F_q^m}$, it’s NP-hard to find $\mathcal{F}(\vec{s}) &#x3D; \vec{t}$. </p>
+<h3 id="Polar-Form"><a href="#Polar-Form" class="headerlink" title="Polar Form"></a>Polar Form</h3><p>It’s clear that:<br>$$<br>\begin{aligned}<br>f(\vec{x} + \vec{y}) &amp;&#x3D; (\vec{x} + \vec{y})^\top  A  (\vec{x} + \vec{y}) + \vec{b}^\top  (\vec{x} + \vec{y}) + c \\<br>&amp;&#x3D; f(\vec{x}) + f(\vec{y}) - f(\vec{0}) + \vec{x}^\top  (A + A^\top)  \vec{y} \\<br>\end{aligned}<br>$$</p>
+<p>And we have the polar form: $f’(\vec{x}, \vec{y}) &#x3D; \vec{x}^\top  (A + A^\top)  \vec{y} &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y}) + f(\vec{0})$. This also works for a Multivariate Quadratic Map: $\mathcal{F}’(\vec{x}, \vec{y}) &#x3D; \mathcal{F}(\vec{x} + \vec{y}) - \mathcal{F}(\vec{x}) - \mathcal{F}(\vec{y}) + \mathcal{F}(\vec{0})$.</p>
+<h3 id="Words"><a href="#Words" class="headerlink" title="Words"></a>Words</h3><p>We mainly focus on the quadratic part of a MQ, which serves as the core of the hardness. So we usually have $f(\vec{x}) &#x3D; \sum_i^n \sum_j^n a_{i,j} x_i x_j &#x3D; \vec{x}^\top  A  \vec{x}$. One can always find a symmertric $A$ since $\vec{x}^\top  A  \vec{x} &#x3D; \vec{x}^\top  A^\top  \vec{x} &#x3D; \vec{x}^\top  (\frac{A + A^\top}{2})  \vec{x}$. We can further simplify $A$ into a upper triangular matrix, which is more intuitive and leads to less storage overhead.</p>
+<p>And the polar form: $f’(\vec{x}, \vec{y}) &#x3D; f(\vec{x} + \vec{y}) - f(\vec{x}) - f(\vec{y})$.</p>
+<h3 id="UOV-Signature"><a href="#UOV-Signature" class="headerlink" title="UOV Signature"></a>UOV Signature</h3><p>The Unbalanced Oil and Vinegar (UOV) scheme is a signature scheme based on MQ.</p>
+<p>First we construct an easy-to-solve MQ $f(\vec{x}) &#x3D; \sum_i^n \sum_{j &gt; m}^n a_{i,j} x_i x_j$. Here we call oil variables $\vec{x_o} &#x3D; (x_1, …, x_m, 0, …, 0)$ and vinegar variables $\vec{x_v} &#x3D; (0, …, 0, x_{m+1}, …, x_{m+v})$ (where $n &#x3D; m+v$), and it’s clear that $\mathcal{F}$ is linear to $\vec{x_o}$. By randomly choosing $\vec{x_v}$, one can solve the linear system to get the answer.</p>
+<p>Matrix form:<br>$$<br>A &#x3D; \begin{bmatrix}<br>O_{m \times m} &amp; B_{m \times v} \\<br>O_{v \times m} &amp; C_{v \times v}<br>\end{bmatrix}<br>\rightarrow<br>(\vec{x_o} + \vec{x_v})^\top  A  (\vec{x_o} + \vec{x_v}) &#x3D; \vec{x_o}’^\top  B  \vec{x_v}’ + \vec{x_v}’^\top  C  \vec{x_v}’<br>$$</p>
+<p>Polar form:<br>$$<br>\mathcal{F}(\vec{x_o}) &#x3D; \vec{0} \rightarrow \mathcal{F}(\vec{x_o} + \vec{x_v}) &#x3D; \mathcal{F}’(\vec{x_o}, \vec{x_v}) + \mathcal{F}(\vec{x_v})<br>$$</p>
+<p>In UOV, we use $\mathcal{F}$ as the private key and the public key is $\mathcal{P} &#x3D; \mathcal{F} \circ \mathcal{T}$, where $\mathcal{T}$ is an invertable linear transformation. For a message $m$, the signature $\vec{s}$ satisfies $\mathcal{P}(\vec{s}) &#x3D; \mathcal{Hash}(m)$. The signer just solves $\mathcal{F}(\vec{x}) &#x3D; \mathcal{Hash}(m)$ and computes $\vec{s} &#x3D; \mathcal{T}^{-1}(\vec{x})$.</p>
+<p>The main idea is to find a linear space $\mathcal{O}$ with rank $r \geq m$, and for all $\vec{o} \in \mathcal{O}$ we have $\mathcal{P}(\vec{o}) &#x3D; \vec{0}$. It’s also worth mentioning that for any valid signature $\vec{s}$, $\vec{s} + \mathcal{O}$ is still valid.</p>
+<h3 id="Ring-Signature"><a href="#Ring-Signature" class="headerlink" title="Ring Signature"></a>Ring Signature</h3><p>In this challenge, we have a ring signature scheme based on UOV. Any one of the $n$ users can generate a signature on behalf of the group, and no one can distinguish the signer.</p>
+<ul>
+<li>$\mathcal{Setup}:$ Each user generates a UOV key pair $(\mathcal{P}, \mathcal{F})$.</li>
+<li>$\mathcal{Sign}:$ For message $m$, user $a$ randomly chooses $(\vec{x_1}, …, \vec{x_{a-1}}, \vec{x_{a+1}},…, \vec{x_n})$ and compute $\vec{t} &#x3D; \mathcal{Hash}(m) - \sum_{i \neq a}^n \mathcal{P_i}(\vec{x_i})$. Then user $a$ solve $\mathcal{P_a}(\vec{x_a}) &#x3D; \vec{t}$ with the private key $\mathcal{F_a}$. The signature is $(\vec{x_1}, …, \vec{x_n})$.</li>
+<li>$\mathcal{Verify}:$ Check whether $\mathcal{Hash}(m) &#x3D; \sum_{i}^n \mathcal{P_i}(\vec{x_i})$ satisfies.</li>
+</ul>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h3><p>The solution is easy but elegant.</p>
+<p>We can pick the same public key more than once, and actually it’s possible for us to forge a valid signature for any message (yeah it’s completely broken). Consider a public key $\mathcal{P}$, we have</p>
+<p>$$\vec{t} &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x}) &#x3D; \mathcal{P}’(\vec{x}, \vec{y}) + \mathcal{P}(\vec{y})$$</p>
+<p>Here $\vec{t}$ is linear to $\vec{x}$, that’s all we need to solve this challenge. For a given message $m$, we can pick the same public key $\mathcal{P}$ twice, then randomly choose a $\vec{y}$ and find the solution $\mathcal{Hash}(m) &#x3D; \mathcal{P}(\vec{x} + \vec{y}) - \mathcal{P}(\vec{x})$ (it’s the same for ‘$+$’ and ‘$\oplus$’ on $\mathbb{F_{2^8}}$). And $(\vec{x} + \vec{y}, \vec{x})$ is a valid signature.</p>
+<p><a href="fairy-ring/exp.py">exp.py</a></p>
+]]></content>
+      <tags>
+        <tag>UOV</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SECCON CTF 2025 Final (Tokyo, Japan🇯🇵)</title>
+    <url>/2025/03/04/secconctffinal2025/</url>
+    <content><![CDATA[<p>Time: 2025.03.01-02 (onsite)</p>
+<p><a href="https://github.com/SECCON/SECCON13_final_CTF/tree/main/crypto">https://github.com/SECCON/SECCON13_final_CTF/tree/main/crypto</a></p>
+<p>I participated SECCON 13th Final as a member of P1G SEKAI this weekend, and we finally got 4th among international teams.</p>
+<p><img src="/2025/03/04/secconctffinal2025/images/2.jpg" alt="rank"></p>
+<p>Nice crypto challenges, and I solved 3 out of 4. IF ONLY I’d ever taken some time to study UOV.</p>
+<p><img src="/2025/03/04/secconctffinal2025/images/1.png" alt="solve"></p>
+<p>Or maybe I was just too nervous.</p>
+<p>XO</p>
+<h2 id="RSA-8-solves"><a href="#RSA-8-solves" class="headerlink" title="RSA+ (8 solves)"></a>RSA+ (8 solves)</h2><blockquote>
+<ul>
+<li><a href="RSA+/task.py">task.py</a></li>
+</ul>
+</blockquote>
+<p>It turns out that we can send two composite number $(p, q)$, both smaller than 512 bits. Then we can just find all the solutions on $p_i$ and combine them with CRT.</p>
+<blockquote>
+<p>solution: <a href="RSA+/exp.py">exp.py</a></p>
+</blockquote>
+<p>I believe there exists a better way though.</p>
+<h2 id="DLP-7-solves"><a href="#DLP-7-solves" class="headerlink" title="DLP+ (7 solves)"></a>DLP+ (7 solves)</h2><blockquote>
+<ul>
+<li><a href="DLP+/task.py">task.py</a></li>
+</ul>
+</blockquote>
+<p>A simple idea is that we try to control $g^x$ (or $h^x$) to be small. Then we can get $h^x$ with some bruteforce and solve DLP to get $x$. I found some luck on Mersenne Prime $p &#x3D; 2^n - 1$, where $g^x \pmod{p}$ is very small. Finally I chose M2281 for effective DLP solver. </p>
+<p>Which took me a lot of time and luck, definitely NOT that effective.</p>
+<blockquote>
+<p>solution: <a href="DLP+/exp.py">exp.py</a></p>
+</blockquote>
+<p>@Sceleri and @soon_haari used $p &#x3D; 2^a \cdot 3^b + 1$. It does make more sense since $g &#x3D; 2^{a-1} \cdot 3^b$ and $h &#x3D; 2^a \cdot 3^{b-1}$ (same in our solution). But I donot want to go through it again so just let it go.</p>
+<p><img src="/2025/03/04/secconctffinal2025/images/3.png" alt="image"></p>
+<h2 id="hell-summon-6-solves"><a href="#hell-summon-6-solves" class="headerlink" title="hell_summon (6 solves)"></a>hell_summon (6 solves)</h2><blockquote>
+<ul>
+<li><a href="hell_summon/task.py">task.py</a></li>
+</ul>
+</blockquote>
+<p>I spent the whole afternoon day 1 on this one.</p>
+<p>We have 42 pairs of $(m_i, c_i &#x3D; r \cdot (m_i  \oplus H) + e_i \pmod{p})$, where $e_i$ is due to the truncation. We rewrite $m_i \oplus H$ as $\Sigma_{j&#x3D;0}^{39} (m_{i, j} + H_{j} - 2 \cdot m_{i, j} \cdot H_{j}) \cdot 2^{j}$. </p>
+<p>$$\Rightarrow \Sigma_{j&#x3D;0}^{39} r \cdot H_{j} \cdot ((1 - 2 \cdot m_{i, j}) \cdot 2^{j}) + r \cdot m_i  + e_i \pmod{p}$$</p>
+<p>Orthogonal Lattice seems to be an adorable choice, and it worked well. On the first attempt I found one short vector $v$ where $\vec{v} \cdot \vec{c} &#x3D; \vec{v} \cdot \vec{e} \pmod{p}$, and it’s small enough to omit $p$. But I didn’t manage to solve $\vec{e}$.</p>
+<p>On another attempt at midnight, I used vectors $(v_0, v_1)$ orthogonal to $\Sigma_{j&#x3D;0}^{39} r \cdot H_{j} \cdot ((1 - 2 \cdot m_{i, j}) \cdot 2^{j})$. Then we have two equations $r \cdot (\vec{v_i} \cdot \vec{m}) + \vec{v_i} \cdot \vec{e} \pmod{p}$, where $\vec{v_i} \cdot \vec{e}$ is small. Now we can solve it as a simple HNP.</p>
+<blockquote>
+<p>solution: <a href="hell_summon/exp.py">exp.py</a></p>
+</blockquote>
+<p>Definitely not a pleasing code but whatever.</p>
+<h2 id="x-x-4-solves"><a href="#x-x-4-solves" class="headerlink" title="*x_x (4 solves)"></a>*x_x (4 solves)</h2><blockquote>
+<ul>
+<li><a href="x_x/task.sage">task.sage</a></li>
+</ul>
+</blockquote>
+<p>Working on it. UOV and sth bluhbluhbluh.</p>
+<h2 id="In-Japan"><a href="#In-Japan" class="headerlink" title="In Japan"></a>In Japan</h2><p>My first time to Japan, also my first time abroad. Not bad actually.</p>
+<table>
+<thead>
+<tr>
+<th><img src="/2025/03/04/secconctffinal2025/images/seccon.jpg" alt="seccon"></th>
+<th><img src="/2025/03/04/secconctffinal2025/images/view.jpg" alt="view"></th>
+<th><img src="/2025/03/04/secconctffinal2025/images/food.jpg" alt="food"></th>
+</tr>
+</thead>
+</table>
+<p>My teammates are very strong! Glad to work with them XD<br>And also great to meet many friends from P1G SEKAI.</p>
+<p><img src="/2025/03/04/secconctffinal2025/images/view1.jpg" alt="view1"></p>
+<table>
+<thead>
+<tr>
+<th><img src="/2025/03/04/secconctffinal2025/images/view2.jpg" alt="view2"></th>
+<th><img src="/2025/03/04/secconctffinal2025/images/view3.jpg" alt="view3"></th>
+</tr>
+</thead>
+</table>
+<p>Sincere thanks to @crazyman :D (Wish I could go to Mt. Fuji.)<br>I realy enjoyed Tokyo. It’d be better if I can hang out for one or two two more days.</p>
+]]></content>
+      <tags>
+        <tag>LLL</tag>
+        <tag>UOV</tag>
       </tags>
   </entry>
   <entry>
@@ -752,202 +897,6 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
 ]]></content>
       <tags>
         <tag>ZKP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Yet another story about Sagemath environment</title>
-    <url>/2025/07/23/sageenv/</url>
-    <content><![CDATA[<p>For some reasons, I reconfigured my Sagemath environment recently. This post shares my tips based on my experiences these days.</p>
-<p>For beginners, I’m sure this is helpful. But most of you crypto players are no strangers to Sagemath - some of you are experts ig. In that case, I hope you’ll still find something interesting here :D</p>
-<p>Our main targets:</p>
-<ol>
-<li>(Basic) Use Sagemath in VS Code, with Syntax Parsing and other helps.</li>
-<li>Integrating external python packages into Sagemath.</li>
-<li>Virtual Environment for Sagemath.</li>
-</ol>
-<h2 id="Run-sage-×-Import-sage-√"><a href="#Run-sage-×-Import-sage-√" class="headerlink" title="Run sage ×; Import sage √"></a>Run <code>sage</code> ×; Import <code>sage</code> √</h2><p>Sagemath supports many special syntaxes for simplicity and convenience. Take the following code as an example, you can use it directly in a console or write it to a <code>main.sage</code> and run it with <code>sage main.sage</code>. Typically, it is least efficient to run code in a console.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># main.sage</span></span><br><span class="line">R.&lt;x&gt; = ZZ[]</span><br><span class="line">f = x^<span class="number">2</span> - <span class="number">16</span></span><br><span class="line"><span class="built_in">print</span>(f.roots())</span><br><span class="line"><span class="comment"># [(4, 1), (-4, 1)]</span></span><br></pre></td></tr></table></figure>
-
-<p>But, as we all know, Sagemath is essentially python-style code, and we can use it exactly as python. In this case, you can import <code>sage</code> like a package and run the code with Sagemath’s built-in python interpreter as <code>sage -python main.py</code>.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># main.py</span></span><br><span class="line"><span class="keyword">from</span> sage.<span class="built_in">all</span> <span class="keyword">import</span> *</span><br><span class="line">R, x = PolynomialRing(ZZ, <span class="string">&#x27;x&#x27;</span>).objgen()</span><br><span class="line">f = x**<span class="number">2</span> - <span class="number">16</span></span><br><span class="line"><span class="built_in">print</span>(f.roots())</span><br><span class="line"><span class="comment"># [(4, 1), (-4, 1)]</span></span><br></pre></td></tr></table></figure>
-
-<p>What are the benefits of this? </p>
-<p>As mentioned before, Sagemath supports its own syntax system. When implementing python code, the meaning of some code is implicitly changed. For example, sagemath will use its own type by default for numbers. Another common example is the <code>^</code> symbol in sagemath, which is equivalent to <code>**</code> in python. However, <code>^</code> is used in python for <code>xor</code> computation, for which you will have to use <code>^^</code> in sagemath instead.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">a = <span class="number">233</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># python</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(a), a.bit_length())</span><br><span class="line"><span class="built_in">print</span>(a^<span class="number">2</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">&lt;class &#x27;int&#x27;&gt; 8</span></span><br><span class="line"><span class="string">235</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># sage</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(a), a.nbits())</span><br><span class="line"><span class="built_in">print</span>(a^<span class="number">2</span>)</span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">&lt;class &#x27;sage.rings.integer.Integer&#x27;&gt; 8</span></span><br><span class="line"><span class="string">54289</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>In this case, running your code (especially external python packages or projects) directly with Sagemath can easily have an obscure effect on type identification, function calls, etc. This is intolerable for me, so I highly recommend the python-style solution. </p>
-<p>I don’t know the exact working mechanism in Sagemath, but this works perfectly: for any data type, function, syntax in Sagemath, you can always find the corresponding python code. In fact, you can always find a <code>main.sage.py</code> after you run <code>sage main.sage</code>, which contains the python-version of your Sagemath codes.</p>
-<p>The advantage is that if you implenemt your code entirely in python style, you can introduce python-related tools such as syntax highlighting, which we’ll cover later.</p>
-<p>For efficiency, I don’t think there is a significant difference between the two ways. But if you wanna run sage-independent python code, using a python interpreter (not the one in Sagemath) directly is a more efficient choice.</p>
-<h2 id="External-Python-Packages"><a href="#External-Python-Packages" class="headerlink" title="External Python Packages"></a>External Python Packages</h2><p>A simple way to use external python packages is to run <code>pip install</code> in your Sagemath console. Then you can import them in your sage-style&#x2F;python-style code.</p>
-<h2 id="Basic-is-Enough"><a href="#Basic-is-Enough" class="headerlink" title="Basic is Enough"></a>Basic is Enough</h2><p>Here comes my simple, basic configuration used for years.</p>
-<p>I just implement my codes in VS Code and run them in the terminal with <code>sage -python main.py</code>. Of course, you can use Code Runner for some convenience (but I didn’t). The only configuration I do is Pylance, in order to get code highlighting and other tools in programming. Here, the core of the problem lies in the <strong>interpreter setting</strong>.</p>
-<p>To achieve this, we can run the following code in Sagemath console. </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># tested on my MacOS</span></span><br><span class="line">┌────────────────────────────────────────────────────────────────────┐</span><br><span class="line">│ SageMath version <span class="number">10.6</span>, Release Date: <span class="number">2025</span>-03-<span class="number">31</span>                    │</span><br><span class="line">│ Using Python <span class="number">3.12</span><span class="number">.5</span>. <span class="type">Type</span> <span class="string">&quot;help()&quot;</span> <span class="keyword">for</span> <span class="built_in">help</span>.                       │</span><br><span class="line">└────────────────────────────────────────────────────────────────────┘</span><br><span class="line">sage: <span class="keyword">import</span> sys</span><br><span class="line">sage: sys.path</span><br><span class="line">[<span class="string">&#x27;/Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python312.zip&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12/lib-dynload&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;&#x27;</span>,</span><br><span class="line"> <span class="string">&#x27;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12/site-packages&#x27;</span>]</span><br><span class="line">sage: cat /Applications/SageMath-<span class="number">10</span>-<span class="number">6.</span>app/Contents/Frameworks/Sage.framework/Versions/<span class="number">10.6</span>/local/var/lib/sage/venv-python3<span class="number">.12</span><span class="number">.5</span>/<span class="built_in">bin</span>/sage-python</span><br><span class="line"><span class="comment">#!/bin/sh</span></span><br><span class="line">sage -python <span class="string">&quot;$@&quot;</span></span><br><span class="line">sage: </span><br></pre></td></tr></table></figure>
-
-<p>You can find a <code>.../bin</code> path. There’ll always be a <code>sage-python</code> bash file in that folder, which simply runs <code>sage -python &quot;$@&quot;</code>. If you set this file as the interpreter in your VS Code, you can parse the syntax of sage-related functions.</p>
-<p><img src="/2025/07/23/sageenv/images/1.png" alt="1.png"></p>
-<p>This used to be able to parse external packages, but it stopped working in my VS Code for some reason. My solution is to manually import the <code>.../site-packages</code> path in the outputs above.</p>
-<p>In short, you can create the following <code>.vscode/settings.json</code> file:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;python.defaultInterpreterPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin/sage-python&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;files.exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="comment">// this will hide the following setting files</span></span><br><span class="line">    <span class="attr">&quot;**/.vscode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;**/.env&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>And a <code>.env</code> file:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">PYTHONPATH=<span class="string">&quot;/private/var/tmp/sage-10.6-current/local/var/lib/sage/venv-python3.12.5/lib/python3.12/site-packages&quot;</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>With the corresponding outputs in your own Sagemath, of course.</p>
-</blockquote>
-<p>For those who favor using Jupyter Notebook, this also works. You just need to use Sagemath as a jupyter kernel, and Pylance will effectively parse your codes.</p>
-<h2 id="A-Fresh-Take"><a href="#A-Fresh-Take" class="headerlink" title="A Fresh Take"></a>A Fresh Take</h2><p>Through further explorations, I discovered a more interesting method. You see, we can use <code>.../bin/sage-python</code> mentioned above as a python interpreter, can we set up a virtual environment using <code>venv</code>? The answer is yes, but it’s just a pure python environment (without <code>sage</code> package).</p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">rec:/ $ /Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin/sage-python -m venv new_sage_venv</span><br><span class="line">rec:/ $ <span class="built_in">source</span> new_sage_venv/bin/activate</span><br><span class="line">(new_sage_venv) rec:/ $ python</span><br><span class="line">Python 3.12.5 (main, Feb 25 2025, 12:37:41) [Clang 16.0.0 (clang-1600.0.26.6)] on darwin</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; from sage.all import *</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line 1, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">ModuleNotFoundError: No module named <span class="string">&#x27;sage&#x27;</span></span><br><span class="line">&gt;&gt;&gt; </span><br></pre></td></tr></table></figure>
-
-<p>But it turns out that we can import <code>sage</code> by inheriting the system packages with <code>--system-site-packages</code>. In this way, all virtual environments created share the same Sagemath base environment, and we can make special configurations in each of them. </p>
-<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">rec:/ $ /Applications/SageMath-10-6.app/Contents/Frameworks/Sage.framework/Versions/10.6/local/var/lib/sage/venv-python3.12.5/bin/sage-python -m venv new_sage_venv --system-site-packages</span><br><span class="line">rec:/ $ <span class="built_in">source</span> new_sage_venv/bin/activate</span><br><span class="line">(new_sage_venv) rec:/ $ python</span><br><span class="line">Python 3.12.5 (main, Feb 25 2025, 12:37:41) [Clang 16.0.0 (clang-1600.0.26.6)] on darwin</span><br><span class="line">Type <span class="string">&quot;help&quot;</span>, <span class="string">&quot;copyright&quot;</span>, <span class="string">&quot;credits&quot;</span> or <span class="string">&quot;license&quot;</span> <span class="keyword">for</span> more information.</span><br><span class="line">&gt;&gt;&gt; from sage.all import *</span><br><span class="line">&gt;&gt;&gt; GF</span><br><span class="line">&lt;sage.rings.finite_rings.finite_field_constructor.FiniteFieldFactory object at 0x1099ae490&gt;</span><br><span class="line">&gt;&gt;&gt; </span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>It’s the same if you use <code>sage -python</code> to create one.</p>
-</blockquote>
-<p>The advantages are obvious: pure, independent virtual python environment with <code>sage</code> packages, which makes configuration and package management much easier. We don’t need any additional configurations described earlier. We just need to set the current virtual environment in VS Code and run our code as <code>python main.py</code>, install new package as <code>pip install package</code>…</p>
-<p>Also, we can use this python interpreter for Jupyter Notebook.</p>
-<p>With the new virtual environment, you can create the following <code>.vscode/settings.json</code> file in your VS Code:</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;python.defaultInterpreterPath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;new_sage_venv/bin/python&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;python.terminal.activateEnvironment&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span> <span class="comment">// activate the venv in vscode every time</span></span><br><span class="line">    <span class="attr">&quot;files.exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="comment">// this will hide the following setting files</span></span><br><span class="line">        <span class="attr">&quot;**/.vscode&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;**/new_sage_venv&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>Uhh, the end. I thought there’ll be more to share but it turns out to be simple. Hope you enjoy this!</p>
-]]></content>
-      <tags>
-        <tag>sagemath</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SECCON CTF 2025 Final (Tokyo, Japan🇯🇵)</title>
-    <url>/2025/03/04/secconctffinal2025/</url>
-    <content><![CDATA[<p>Time: 2025.03.01-02 (onsite)</p>
-<p><a href="https://github.com/SECCON/SECCON13_final_CTF/tree/main/crypto">https://github.com/SECCON/SECCON13_final_CTF/tree/main/crypto</a></p>
-<p>I participated SECCON 13th Final as a member of P1G SEKAI this weekend, and we finally got 4th among international teams.</p>
-<p><img src="/2025/03/04/secconctffinal2025/images/2.jpg" alt="rank"></p>
-<p>Nice crypto challenges, and I solved 3 out of 4. IF ONLY I’d ever taken some time to study UOV.</p>
-<p><img src="/2025/03/04/secconctffinal2025/images/1.png" alt="solve"></p>
-<p>Or maybe I was just too nervous.</p>
-<p>XO</p>
-<h2 id="RSA-8-solves"><a href="#RSA-8-solves" class="headerlink" title="RSA+ (8 solves)"></a>RSA+ (8 solves)</h2><blockquote>
-<ul>
-<li><a href="RSA+/task.py">task.py</a></li>
-</ul>
-</blockquote>
-<p>It turns out that we can send two composite number $(p, q)$, both smaller than 512 bits. Then we can just find all the solutions on $p_i$ and combine them with CRT.</p>
-<blockquote>
-<p>solution: <a href="RSA+/exp.py">exp.py</a></p>
-</blockquote>
-<p>I believe there exists a better way though.</p>
-<h2 id="DLP-7-solves"><a href="#DLP-7-solves" class="headerlink" title="DLP+ (7 solves)"></a>DLP+ (7 solves)</h2><blockquote>
-<ul>
-<li><a href="DLP+/task.py">task.py</a></li>
-</ul>
-</blockquote>
-<p>A simple idea is that we try to control $g^x$ (or $h^x$) to be small. Then we can get $h^x$ with some bruteforce and solve DLP to get $x$. I found some luck on Mersenne Prime $p &#x3D; 2^n - 1$, where $g^x \pmod{p}$ is very small. Finally I chose M2281 for effective DLP solver. </p>
-<p>Which took me a lot of time and luck, definitely NOT that effective.</p>
-<blockquote>
-<p>solution: <a href="DLP+/exp.py">exp.py</a></p>
-</blockquote>
-<p>@Sceleri and @soon_haari used $p &#x3D; 2^a \cdot 3^b + 1$. It does make more sense since $g &#x3D; 2^{a-1} \cdot 3^b$ and $h &#x3D; 2^a \cdot 3^{b-1}$ (same in our solution). But I donot want to go through it again so just let it go.</p>
-<p><img src="/2025/03/04/secconctffinal2025/images/3.png" alt="image"></p>
-<h2 id="hell-summon-6-solves"><a href="#hell-summon-6-solves" class="headerlink" title="hell_summon (6 solves)"></a>hell_summon (6 solves)</h2><blockquote>
-<ul>
-<li><a href="hell_summon/task.py">task.py</a></li>
-</ul>
-</blockquote>
-<p>I spent the whole afternoon day 1 on this one.</p>
-<p>We have 42 pairs of $(m_i, c_i &#x3D; r \cdot (m_i  \oplus H) + e_i \pmod{p})$, where $e_i$ is due to the truncation. We rewrite $m_i \oplus H$ as $\Sigma_{j&#x3D;0}^{39} (m_{i, j} + H_{j} - 2 \cdot m_{i, j} \cdot H_{j}) \cdot 2^{j}$. </p>
-<p>$$\Rightarrow \Sigma_{j&#x3D;0}^{39} r \cdot H_{j} \cdot ((1 - 2 \cdot m_{i, j}) \cdot 2^{j}) + r \cdot m_i  + e_i \pmod{p}$$</p>
-<p>Orthogonal Lattice seems to be an adorable choice, and it worked well. On the first attempt I found one short vector $v$ where $\vec{v} \cdot \vec{c} &#x3D; \vec{v} \cdot \vec{e} \pmod{p}$, and it’s small enough to omit $p$. But I didn’t manage to solve $\vec{e}$.</p>
-<p>On another attempt at midnight, I used vectors $(v_0, v_1)$ orthogonal to $\Sigma_{j&#x3D;0}^{39} r \cdot H_{j} \cdot ((1 - 2 \cdot m_{i, j}) \cdot 2^{j})$. Then we have two equations $r \cdot (\vec{v_i} \cdot \vec{m}) + \vec{v_i} \cdot \vec{e} \pmod{p}$, where $\vec{v_i} \cdot \vec{e}$ is small. Now we can solve it as a simple HNP.</p>
-<blockquote>
-<p>solution: <a href="hell_summon/exp.py">exp.py</a></p>
-</blockquote>
-<p>Definitely not a pleasing code but whatever.</p>
-<h2 id="x-x-4-solves"><a href="#x-x-4-solves" class="headerlink" title="*x_x (4 solves)"></a>*x_x (4 solves)</h2><blockquote>
-<ul>
-<li><a href="x_x/task.sage">task.sage</a></li>
-</ul>
-</blockquote>
-<p>Working on it. UOV and sth bluhbluhbluh.</p>
-<h2 id="In-Japan"><a href="#In-Japan" class="headerlink" title="In Japan"></a>In Japan</h2><p>My first time to Japan, also my first time abroad. Not bad actually.</p>
-<table>
-<thead>
-<tr>
-<th><img src="/2025/03/04/secconctffinal2025/images/seccon.jpg" alt="seccon"></th>
-<th><img src="/2025/03/04/secconctffinal2025/images/view.jpg" alt="view"></th>
-<th><img src="/2025/03/04/secconctffinal2025/images/food.jpg" alt="food"></th>
-</tr>
-</thead>
-</table>
-<p>My teammates are very strong! Glad to work with them XD<br>And also great to meet many friends from P1G SEKAI.</p>
-<p><img src="/2025/03/04/secconctffinal2025/images/view1.jpg" alt="view1"></p>
-<table>
-<thead>
-<tr>
-<th><img src="/2025/03/04/secconctffinal2025/images/view2.jpg" alt="view2"></th>
-<th><img src="/2025/03/04/secconctffinal2025/images/view3.jpg" alt="view3"></th>
-</tr>
-</thead>
-</table>
-<p>Sincere thanks to @crazyman :D (Wish I could go to Mt. Fuji.)<br>I realy enjoyed Tokyo. It’d be better if I can hang out for one or two two more days.</p>
-]]></content>
-      <tags>
-        <tag>LLL</tag>
-        <tag>UOV</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>zk-Openings::Srdnlen CTF 2025 Qual</title>
-    <url>/2025/03/24/srdnlenctf2025/</url>
-    <content><![CDATA[<p>Time: 2025.01.19-20 (online)</p>
-<p>Interesting challenge, but I didn’t have enough time to solve it during the contest XDDD</p>
-<h2 id="zk-Openings-0-solve"><a href="#zk-Openings-0-solve" class="headerlink" title="zk-Openings (0 solve)"></a>zk-Openings (0 solve)</h2><blockquote>
-<ul>
-<li><a href="https://github.com/srdnlen/srdnlenctf-2025_public/tree/main/crypto_zk-openings/src">https://github.com/srdnlen/srdnlenctf-2025_public&#x2F;tree&#x2F;main&#x2F;crypto_zk-openings&#x2F;src</a></li>
-</ul>
-</blockquote>
-<p>I actually learnt a lot from the implementation, thank you @lrnzsir.</p>
-<h3 id="KZG-Commitment"><a href="#KZG-Commitment" class="headerlink" title="KZG Commitment"></a>KZG Commitment</h3><p>KZG commitment is a polynomial commitment scheme proposed by <a href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf">Kate et al in 2010</a>.</p>
-<p>While the original paper used a symmertric type-1 pairing, we prefer to use type-3 pairing these days. Basically we have three groups $(G_1, G_2, G_T)$ , two generators $(g_1 \in G_1, g_2 \in G_2)$, and a bilinear pairing function $e: G_1 \times G_2 \rightarrow G_T$. </p>
-<ol>
-<li>$\mathcal{Setup}(d) \rightarrow srs$: randomly samples a secret value $x$, and computes $srs &#x3D; (g_1^{x}, …, g_1^{x^d}, g_2^{x})$. While $x$ is considered to be “toxic waste”, it must be generated by trusted authority and deleted properly after use.</li>
-<li>$\mathcal{Commit}(srs, f) \rightarrow com$: computes the commitment $com &#x3D; g_1^{\Sigma_{i&#x3D;0}^d f_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{f_i}$ for the polynomial.</li>
-<li>$\mathcal{EvalProve}(srs, f, z) \rightarrow (\pi, f(z))$: computes a polynomial $q(x) &#x3D; \frac{f(x) - f(z)}{x-z}$. Then it computes the proof $\pi &#x3D; g_1^{\Sigma_{i&#x3D;0}^d q_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{q_i}$, proving that one knows the evaluation of $f$ over $z$.</li>
-<li>$\mathcal{EvalVerify}(srs, com, \pi, z, f(z)) \rightarrow 0&#x2F;1$: verifies the proof by checking $e(com \cdot g_1^{-f(z)}, g_2) \overset{?}{&#x3D;} e(\pi, g_2^{s} \cdot g_2^{-z})$.</li>
-</ol>
-<blockquote>
-<p>Note that KZG is a commitment (instead of ZKP) scheme. </p>
-</blockquote>
-<h3 id="The-Challenge"><a href="#The-Challenge" class="headerlink" title="The Challenge"></a>The Challenge</h3><p>For this challenge, we performs the KZG process on some secret polynomial $f$ and ended up with <code>opening.json</code>. Considering the difficulty of DLP under standard parameters, I actually just skip the content related to curve points. So basically we have $k&#x3D;20$ pairs of $(x_i, y_i&#x3D;f(x_i))$.</p>
-<p>And here is how we get the secret polynomial. </p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> n <span class="keyword">in</span> AES.key_size <span class="comment"># 32</span></span><br><span class="line">key = os.urandom(n)</span><br><span class="line">evals = <span class="built_in">list</span>(key)</span><br><span class="line">poly = P(intt(evals))</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcg</span>(<span class="params">m: <span class="built_in">int</span>, a: <span class="built_in">int</span>, c: <span class="built_in">int</span>, x: <span class="built_in">int</span></span>) -&gt; <span class="string">&quot;Generator[int, None, None]&quot;</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Linear Congruential Generator &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        x = (a * x + c) % m</span><br><span class="line">        <span class="keyword">yield</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a, c, x = [secrets.randbelow(p) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)]</span><br><span class="line">rng = lcg(p, a, c, x)</span><br><span class="line"></span><br><span class="line">k = <span class="number">20</span></span><br><span class="line">hiding_poly = P([<span class="built_in">next</span>(rng) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k)])</span><br><span class="line">hidden_poly = poly + hiding_poly * Z_H</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(hidden_poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br></pre></td></tr></table></figure>
-
-<p>In short, we have a 32-degree polynomial $f(x)$ and a 20-degree polynomial $g(x)$, where $f(H_i) &#x3D; key_i$ and $g_i$ is generated successively by a secret LCG. Then we have our secret polynomial $h(x) &#x3D; f(x) + g(x) \cdot (x^n-1)$ satisfying $h(H_i) &#x3D; f(H_i) &#x3D; key_i$ since $H_i^n &#x3D; 1$.</p>
-<p>According to previous discussion, we have 20 pairs of random points $(x_i, h(x_i))$, which is apparently not enough to recover $h(x)$. Considering $key_i$ is very small compared to $p$, LLL is our option. </p>
-<p>We can’t construct the Lattice directly, but we can resort to $g(x)$. The first step is to establish a linear representation between $g(x)$ and $key_i$, which is quite simple, since <code>ntt</code>, <code>intt</code> and <code>polynomial_evaluation</code> are all linear transformations. </p>
-<ul>
-<li>$\vec{key} &#x3D; NTT_{n \times n} \cdot \vec{f}$</li>
-<li>$\vec{y} &#x3D; X_{k \times (n+k)} \cdot \vec{h} &#x3D; FX_{k \times n} \cdot \vec{f}+ GX_{k \times k} \cdot \vec{g}$</li>
-</ul>
-<p>$\Rightarrow \vec{g} &#x3D; GX^{-1} \cdot (\vec{y} - FX \cdot NTT^{-1} \cdot \vec{key})$</p>
-<p>For $NTT^{-1}$, you can also compute $iNTT$.</p>
-<h3 id="Linearization-for-Unknown-LCG"><a href="#Linearization-for-Unknown-LCG" class="headerlink" title="Linearization for Unknown LCG"></a>Linearization for Unknown LCG</h3><p>We know that $g_{i+1} &#x3D; a \cdot g_i + b$, but $(a, b)$ are randomly chosen on $GF_p$. To get rid of them, we construct equations like $(g_{i+d_0} - g_{i}) \cdot (g_{j+d_1} - g_{j}) &#x3D; (g_{i+d_1} - g_{i}) \cdot (g_{j+d_0} - g_{j})$.</p>
-<p>Here comes an interesting (maybe) question: how many linearly independent equations can we get? Well this did appealled to me and @糖醋小鸡块. Since we can get $k-2$ equations like $y_{i+1} &#x3D; a \cdot y_i$, we can choose any two of them to eliminate $a$, and thus we have $C(k-2, 2)$ equations.</p>
-<p>For @lrnzsir’s strategy, he iterates $(g_{i+2}-g_{i+1}) \cdot (g_{j+1}-g_j) &#x3D; (g_{i+1}-g_i) \cdot (g_{j+2}-g_{j+1})$ for all $i, j \in [k - 2]$ and $i &lt; j$. We can get exactly $C(k-2, 2)$ equations and each equation contains a unique binomial (thus linear independent). So this is the best we can get.</p>
-<blockquote>
-<p>We (@糖醋小鸡块) believe there exists a better way for theoratical analysis.</p>
-</blockquote>
-<p>With linear transformation, we have $C(k-2, 2)$ quadratic equations about $key_i$ now, containing $n + C(n+1, 2)$ monomials. Then we can do LLL on the linearized system to recover the key. One can ignore some equations and utilize <code>flatter</code> for better efficiency.</p>
-<blockquote>
-<p><a href="zk-Openings/exp.py">exp.py</a></p>
-</blockquote>
-<p>There maybe some difference in my code since it’s implemented months ago XD</p>
-]]></content>
-      <tags>
-        <tag>LLL</tag>
-        <tag>KZG</tag>
       </tags>
   </entry>
   <entry>
@@ -1196,6 +1145,58 @@ The initialization is done by contract `Setup`. In short there are two `DEX` con
         <tag>ECC</tag>
         <tag>UOV</tag>
         <tag>ZKP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>zk-Openings::Srdnlen CTF 2025 Qual</title>
+    <url>/2025/03/24/srdnlenctf2025/</url>
+    <content><![CDATA[<p>Time: 2025.01.19-20 (online)</p>
+<p>Interesting challenge, but I didn’t have enough time to solve it during the contest XDDD</p>
+<h2 id="zk-Openings-0-solve"><a href="#zk-Openings-0-solve" class="headerlink" title="zk-Openings (0 solve)"></a>zk-Openings (0 solve)</h2><blockquote>
+<ul>
+<li><a href="https://github.com/srdnlen/srdnlenctf-2025_public/tree/main/crypto_zk-openings/src">https://github.com/srdnlen/srdnlenctf-2025_public&#x2F;tree&#x2F;main&#x2F;crypto_zk-openings&#x2F;src</a></li>
+</ul>
+</blockquote>
+<p>I actually learnt a lot from the implementation, thank you @lrnzsir.</p>
+<h3 id="KZG-Commitment"><a href="#KZG-Commitment" class="headerlink" title="KZG Commitment"></a>KZG Commitment</h3><p>KZG commitment is a polynomial commitment scheme proposed by <a href="https://www.iacr.org/archive/asiacrypt2010/6477178/6477178.pdf">Kate et al in 2010</a>.</p>
+<p>While the original paper used a symmertric type-1 pairing, we prefer to use type-3 pairing these days. Basically we have three groups $(G_1, G_2, G_T)$ , two generators $(g_1 \in G_1, g_2 \in G_2)$, and a bilinear pairing function $e: G_1 \times G_2 \rightarrow G_T$. </p>
+<ol>
+<li>$\mathcal{Setup}(d) \rightarrow srs$: randomly samples a secret value $x$, and computes $srs &#x3D; (g_1^{x}, …, g_1^{x^d}, g_2^{x})$. While $x$ is considered to be “toxic waste”, it must be generated by trusted authority and deleted properly after use.</li>
+<li>$\mathcal{Commit}(srs, f) \rightarrow com$: computes the commitment $com &#x3D; g_1^{\Sigma_{i&#x3D;0}^d f_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{f_i}$ for the polynomial.</li>
+<li>$\mathcal{EvalProve}(srs, f, z) \rightarrow (\pi, f(z))$: computes a polynomial $q(x) &#x3D; \frac{f(x) - f(z)}{x-z}$. Then it computes the proof $\pi &#x3D; g_1^{\Sigma_{i&#x3D;0}^d q_i \cdot x^i} &#x3D; \Pi_{i&#x3D;0}^{d} (g_1^{x^i})^{q_i}$, proving that one knows the evaluation of $f$ over $z$.</li>
+<li>$\mathcal{EvalVerify}(srs, com, \pi, z, f(z)) \rightarrow 0&#x2F;1$: verifies the proof by checking $e(com \cdot g_1^{-f(z)}, g_2) \overset{?}{&#x3D;} e(\pi, g_2^{s} \cdot g_2^{-z})$.</li>
+</ol>
+<blockquote>
+<p>Note that KZG is a commitment (instead of ZKP) scheme. </p>
+</blockquote>
+<h3 id="The-Challenge"><a href="#The-Challenge" class="headerlink" title="The Challenge"></a>The Challenge</h3><p>For this challenge, we performs the KZG process on some secret polynomial $f$ and ended up with <code>opening.json</code>. Considering the difficulty of DLP under standard parameters, I actually just skip the content related to curve points. So basically we have $k&#x3D;20$ pairs of $(x_i, y_i&#x3D;f(x_i))$.</p>
+<p>And here is how we get the secret polynomial. </p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">assert</span> n <span class="keyword">in</span> AES.key_size <span class="comment"># 32</span></span><br><span class="line">key = os.urandom(n)</span><br><span class="line">evals = <span class="built_in">list</span>(key)</span><br><span class="line">poly = P(intt(evals))</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lcg</span>(<span class="params">m: <span class="built_in">int</span>, a: <span class="built_in">int</span>, c: <span class="built_in">int</span>, x: <span class="built_in">int</span></span>) -&gt; <span class="string">&quot;Generator[int, None, None]&quot;</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot; Linear Congruential Generator &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        x = (a * x + c) % m</span><br><span class="line">        <span class="keyword">yield</span> x</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a, c, x = [secrets.randbelow(p) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>)]</span><br><span class="line">rng = lcg(p, a, c, x)</span><br><span class="line"></span><br><span class="line">k = <span class="number">20</span></span><br><span class="line">hiding_poly = P([<span class="built_in">next</span>(rng) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(k)])</span><br><span class="line">hidden_poly = poly + hiding_poly * Z_H</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(hidden_poly(H[i]) == key[i] <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(n))</span><br></pre></td></tr></table></figure>
+
+<p>In short, we have a 32-degree polynomial $f(x)$ and a 20-degree polynomial $g(x)$, where $f(H_i) &#x3D; key_i$ and $g_i$ is generated successively by a secret LCG. Then we have our secret polynomial $h(x) &#x3D; f(x) + g(x) \cdot (x^n-1)$ satisfying $h(H_i) &#x3D; f(H_i) &#x3D; key_i$ since $H_i^n &#x3D; 1$.</p>
+<p>According to previous discussion, we have 20 pairs of random points $(x_i, h(x_i))$, which is apparently not enough to recover $h(x)$. Considering $key_i$ is very small compared to $p$, LLL is our option. </p>
+<p>We can’t construct the Lattice directly, but we can resort to $g(x)$. The first step is to establish a linear representation between $g(x)$ and $key_i$, which is quite simple, since <code>ntt</code>, <code>intt</code> and <code>polynomial_evaluation</code> are all linear transformations. </p>
+<ul>
+<li>$\vec{key} &#x3D; NTT_{n \times n} \cdot \vec{f}$</li>
+<li>$\vec{y} &#x3D; X_{k \times (n+k)} \cdot \vec{h} &#x3D; FX_{k \times n} \cdot \vec{f}+ GX_{k \times k} \cdot \vec{g}$</li>
+</ul>
+<p>$\Rightarrow \vec{g} &#x3D; GX^{-1} \cdot (\vec{y} - FX \cdot NTT^{-1} \cdot \vec{key})$</p>
+<p>For $NTT^{-1}$, you can also compute $iNTT$.</p>
+<h3 id="Linearization-for-Unknown-LCG"><a href="#Linearization-for-Unknown-LCG" class="headerlink" title="Linearization for Unknown LCG"></a>Linearization for Unknown LCG</h3><p>We know that $g_{i+1} &#x3D; a \cdot g_i + b$, but $(a, b)$ are randomly chosen on $GF_p$. To get rid of them, we construct equations like $(g_{i+d_0} - g_{i}) \cdot (g_{j+d_1} - g_{j}) &#x3D; (g_{i+d_1} - g_{i}) \cdot (g_{j+d_0} - g_{j})$.</p>
+<p>Here comes an interesting (maybe) question: how many linearly independent equations can we get? Well this did appealled to me and @糖醋小鸡块. Since we can get $k-2$ equations like $y_{i+1} &#x3D; a \cdot y_i$, we can choose any two of them to eliminate $a$, and thus we have $C(k-2, 2)$ equations.</p>
+<p>For @lrnzsir’s strategy, he iterates $(g_{i+2}-g_{i+1}) \cdot (g_{j+1}-g_j) &#x3D; (g_{i+1}-g_i) \cdot (g_{j+2}-g_{j+1})$ for all $i, j \in [k - 2]$ and $i &lt; j$. We can get exactly $C(k-2, 2)$ equations and each equation contains a unique binomial (thus linear independent). So this is the best we can get.</p>
+<blockquote>
+<p>We (@糖醋小鸡块) believe there exists a better way for theoratical analysis.</p>
+</blockquote>
+<p>With linear transformation, we have $C(k-2, 2)$ quadratic equations about $key_i$ now, containing $n + C(n+1, 2)$ monomials. Then we can do LLL on the linearized system to recover the key. One can ignore some equations and utilize <code>flatter</code> for better efficiency.</p>
+<blockquote>
+<p><a href="zk-Openings/exp.py">exp.py</a></p>
+</blockquote>
+<p>There maybe some difference in my code since it’s implemented months ago XD</p>
+]]></content>
+      <tags>
+        <tag>LLL</tag>
+        <tag>KZG</tag>
       </tags>
   </entry>
 </search>
